@@ -38,12 +38,6 @@ set of image analysis functions can be used to estimate the pair-wise distance b
 of a protein complex (prey-GFP) and a static intracellular anchor site (anchor-RFP). From a dataset of 20 - 30 images, 
 PyF2F-Ruler estimates the μ and σ values of the final distance distribution with a precision below 5 nm.
 
-PyF2F-Ruler can also use the set of pairwise distances to trilaterate the fluorophores's relative positions. Each 
-fluorophore position is determined by a steepest descend algorithm (Conjugate Gradients). The best scoring positions 
-(those that fit better with the input data) can be integrated with available structural information using the
-[Integrative Modeling Platform](https://integrativemodeling.org/) to recapitulate the architecture of the protein complex
-in its close-to-native environment ([Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521)).
-
 
 Instructions
 -----------
