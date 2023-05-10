@@ -52,7 +52,7 @@ to run the image analysis workflow without the need of installation.
    run the following command:
 
 ```bash
-  $ git clone https://github.com/Altairch95/PICT-MODELLER
+  $ https://github.com/GallegoLab/PyF2F-Ruler.git
   $ cd PyF2F-Ruler
  ```
 2) Download the CNN weights: PyF2F-Ruler utilizes the pre-trained weights for the neural network that is used for 
@@ -64,7 +64,7 @@ Once downloaded, simply unzip it and move it to the *scripts/* directory. You ca
 
 ```bash
   $ unzip weights.zip
-  $ mv weights/ path/to/PyF2F-Ruler/scripts/
+  $ mv weights/ PyF2F-Ruler/scripts/
  ```
 
 3) Create a conda environment:
@@ -89,13 +89,14 @@ The package has the following structure:
     PyF2F-Ruler/
       README.md
       scripts/
+          run_pyf2f.sh               (running PyF2F-Ruler)
           calculate_PICT_distances.py
           custom.py
           gaussian_fit.py
           kde.py
           lle.py
           rnd.py
-          measure_pict_distances.py  (main script)
+          measure_pict_distances.py  
           options.py                 (User selections)
           outlier_rejections.py
           segmentation_pp.py
@@ -307,5 +308,4 @@ where <i>S(p<sub>δµ</sub>)</i>, <i>S(p<sub>δσ</sub>)</i> will be maimal when
 
 Acknowledgements
 ----------
-
 
