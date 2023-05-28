@@ -16,3 +16,4 @@ seaborn==0.12.2
 silence_tensorflow==1.2.0
 tensorflow==1.15.0
 trackpy==0.5.0
+vtk
