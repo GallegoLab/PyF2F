@@ -10,6 +10,8 @@ Cell segmentation is done using YeastSpotter software code
 
 """
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'   # silence warnings
+
 import shutil
 import logging
 import sys
@@ -30,8 +32,6 @@ from mrcnn.convert_to_image import convert_to_image, convert_to_imagej
 from silence_tensorflow import silence_tensorflow
 
 silence_tensorflow()  # Silence Tensorflow WARNINGS
-
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # silence warnings
 
 # ======================
 # SEGMENTATION FUNCTIONS
@@ -288,6 +288,7 @@ def save_html_figure(path_to_save, spots_df, img_num, img_contour_lab, ch_name="
     """
     Display selected and non-selected spots in an interactive image
     and save image in html format
+
     Parameters
     ----------
     ch_name: channel name: "W1" or "W2"
@@ -564,6 +565,7 @@ def main_segmentation(segment_dir, images_dir, spots_dir, results_dir, figures_d
     # ax.axvline(x=np.mean(distances_seg), color='cornflowerblue', ls='--', lw=2.5, alpha=0.8)
     plt.grid()
     plt.savefig(figures_dir + "pp_segmented/" + "distances_after_segmentation.png")
+    plt.clf()
     return total_data, total_selected
 
 

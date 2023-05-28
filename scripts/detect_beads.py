@@ -61,16 +61,17 @@ def min_mass_selection(data, bins=1000, min_mass_cutoff=0.01):
     return np.sort(data[data <= cf])
 
 
-def select_mass_cdf(data, bins=100, min_mass_cutoff=0.01, max_mass_cutoff=0.90, debug=False, verbose=False):
+def select_mass_cdf(data, bins=100, min_mass_cutoff=0.01, max_mass_cutoff=0.90, debug=False, verbose=False, cycles=10):
     """
     Estimates the probability density function (PDF) and the cumulative probability
     density function (CDF) of a univariate datapoints. In this case, the function helps
-    to reject the m % of spots that are too bright (default: 0.85).
+    to reject the m % of spots that are too bright (default: 0.90).
 
     data: 1d-array of values which are the mass of detected spots.
     bins: smooth parameter to calculate the density (sum of density ~ 1)
     max_mass_cutoff: Selecting spots below this threshold (in tant per 1)
     min_mass_cutoff: Selecting spots above this threshold (in tant per 1)
+    cycles: max number of iterations to optimize bin size
     """
     # Low-mass spots selection
     low_mass_spots = min_mass_selection(data, bins=1000, min_mass_cutoff=min_mass_cutoff)
@@ -90,9 +91,15 @@ def select_mass_cdf(data, bins=100, min_mass_cutoff=0.01, max_mass_cutoff=0.90, 
                   "\t+ Original bin size = {}\n"
                   "\t+ Sum pdf = {}\n".format(bins, total_pdf))
         search_bin_step = - 5
+        c = 0
         while not 0.98 < total_pdf <= 1:
+            c += 1
+            if debug:
+                print(f"\t+Optimizing bin size cycle {c}...\n")
             if bins <= 10:
                 break
+            if c >= cycles:
+                break     
             bins += search_bin_step
             # print(bins)
             positions = np.linspace(data.min(), data.max(), bins)
@@ -178,31 +185,128 @@ def plot_mass(path_to_save, df, image_name):
     plt.savefig(path_to_save + "mass_selection_{}.png".format(image_name))
 
 
-def plot_distance_distribution(path_to_save, df, image_name):
+def plot_distance_distribution(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
     """
     Method to plot ditance distribution of bead
     pairs BEFORE and AFTER warping
     Parameters
     ----------
     path_to_save
-    df
-    image_name
+    c2_test
+    c1_test
+    c1_test_new
+    px_size
 
     Returns
     -------
 
     """
     fig, ax = plt.subplots(figsize=(15, 15))
-    sns.set(font_scale=1)
+    sns.set(font_scale=2)
     sns.set_style("whitegrid", {'axes.grid': False})
     sns.despine()
-    ax.set_title("Beads Distances BEFORE Warping\n"
-                 "Median = {}\n"
-                 "Stdev = {}\n".format(df.distances.median(), df.distances.std()), fontweight="bold", size=25)
-    sns.histplot(data=df, x="distances", kde=True, ax=ax, fill=True, stat="density")
-    ax.axvline(x=df.distances.mean(), color='red', ls='--', lw=2.5, alpha=0.1)
+    sns.histplot(data=ddist(c2_test, c1_test, px_size=px_size), kde=True, color="sandybrown", ax=ax, fill=True,
+                 stat="density", label="initial c1-c2 distances", cumulative=False)
+    sns.histplot(data=ddist(c2_test, c1_test_new, px_size=px_size), kde=True, color="tomato", ax=ax, fill=True,
+                 stat="density", label="transformed c1-c2 distances", cumulative=False)
+    ax.set_xlabel("$d \ (nm)$")  # fontsize=11, labelpad=30)
+    ax.set_ylabel("$Density$")   # fontsize=45, labelpad=30)
+    ax.set_xlim(0, 100)
+    ax.legend()
     plt.tight_layout()
-    plt.savefig(path_to_save + "/distances_{}.png".format(image_name))
+    plt.savefig(path_to_save + "/distance_distribution.png")
+   # plt.show()
+
+
+def calculate_tre(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
+    """
+    """
+    # TRE
+    tre_ = c1_test_new - c2_test
+    diff_x, diff_y = tre_[:, 0], tre_[:, 1]
+    df = pd.DataFrame({"x_W2": c2_test[:, 0],
+                       "y_W2": c2_test[:, 1],
+                       "x_W1": c1_test[:, 0],
+                       "y_W1": c1_test[:, 1],
+                       "diff_x": diff_x * px_size,
+                       "diff_y": diff_y * px_size})
+    # Gaussian fit to x and y data
+    df = df[(df.diff_x <= 30) & (df.diff_x >= -30) & (df.diff_y <= 30) & (df.diff_y >= -30)]
+    data_x, data_y = df.diff_x.to_list(), df.diff_y.to_list()
+    mu_x, sigma_x = stats.norm.fit(df.diff_x.to_list())
+    mu_y, sigma_y = stats.norm.fit(df.diff_y.to_list())
+
+    # ---------#
+    # Plot the fit
+    # x offset
+    fig, ax = plt.subplots(figsize=(15, 15))
+    sns.histplot(data=data_x, kde=True, color="grey", ax=ax, fill=True, stat="density",
+                 label=f"$\mu_x$ = {round(mu_x, 3)}\n$\sigma_x$ = {round(sigma_x, 3)}\nn = {len(data_x)}")
+    plt.plot(np.arange(min(data_x), max(data_x), 1),
+             stats.norm.pdf(np.arange(min(data_x), max(data_x), 1),
+                            loc=mu_x, scale=sigma_x), c='r', label="Gauss fit", linestyle='--')
+    ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
+    plt.tight_layout()
+    plt.savefig(path_to_save + "/distance_x_offset.png")
+    # plt.show()
+    plt.clf()
+
+    # y offset
+    fig, ax = plt.subplots(figsize=(15, 15))
+    sns.histplot(data=data_y, kde=True, color="grey", ax=ax, fill=True, stat="density",
+                 label=f"$\mu_y$ = {round(mu_y, 3)}\n$\sigma_y$ = {round(sigma_y, 3)}\nn = {len(data_y)}")
+    plt.plot(np.arange(min(data_y), max(data_y), 1),
+             stats.norm.pdf(np.arange(min(data_y), max(data_y), 1),
+                            loc=mu_y, scale=sigma_y), c='r', label="Gauss fit", linestyle='--')
+    ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
+    plt.tight_layout()
+    plt.savefig(path_to_save + "/distance_y_offset.png")
+    # plt.show()
+    plt.clf()
+
+    # ---------#
+    mean_x = np.mean(df.diff_x.to_numpy())
+    mean_y = np.mean(df.diff_y.to_numpy())
+    tre = np.sqrt(mean_x ** 2 + mean_y ** 2)
+
+    # X shift
+    ax1 = sns.scatterplot(data=df, x="x_W1", y="y_W1", hue="diff_x", palette="RdBu")
+    norm = plt.Normalize(df['diff_x'].min(), df['diff_x'].max())
+    sm = plt.cm.ScalarMappable(cmap="RdBu", norm=norm)
+    sm.set_array([])
+    # Remove the legend and add a colorbar
+    ax1.get_legend().remove()
+    ax1.figure.colorbar(sm)
+    ax1.invert_yaxis()
+    plt.tight_layout()
+    plt.savefig(path_to_save + "/x_shift.png")
+    # plt.show()
+    plt.clf()
+
+    # Y shift
+    ax2 = sns.scatterplot(data=df, x="x_W2", y="y_W2", hue="diff_y", palette="RdBu")
+    norm = plt.Normalize(df['diff_y'].min(), df['diff_y'].max())
+    sm = plt.cm.ScalarMappable(cmap="RdBu", norm=norm)
+    sm.set_array([])
+
+    # Remove the legend and add a colorbar
+    ax2.get_legend().remove()
+    ax2.figure.colorbar(sm)
+    ax2.invert_yaxis()
+    plt.tight_layout()
+    plt.savefig(path_to_save + "/y_shift.png")
+    # plt.show()
+    plt.clf()
+
+    print(f"Mean shift in X axis =  {np.round(mean_x, 3)} nm \n")
+    print(f"Mean shift in Y axis =  {np.round(mean_y, 3)} nm \n")
+    print(f"Target Registration Error (TRE) = {np.round(tre, 3)} nm")
+    # Write output of TRE to file
+
+    with open(f"{path_to_save}/TRE.txt", "w") as f:
+        f.write(f"Mean shift in X axis =  {np.round(mean_x, 3)} nm \n")
+        f.write(f"Mean shift in Y axis =  {np.round(mean_y, 3)} nm \n")
+        f.write(f"Target Registration Error (TRE) = {np.round(tre, 3)} nm")
 
 
 def save_html_selected_detection(path_to_save, spots_df, image_name, ndimage, percentile, min_mass_cutoff,
@@ -350,7 +454,7 @@ def plotly_coords(c1_coords, c2_coords, path=None, c1_corrected=None, title=""):
     x_coords_c2, y_coords_c2 = c2_coords[:, 0], c2_coords[:, 1]
     fig = px.scatter(title=title).add_scatter(x=x_coords_c1, y=y_coords_c1, mode="markers", name="W1",
                                   marker_symbol="square-dot",
-                                  marker=dict(color="red", size=5,
+                                  marker=dict(color="blue", size=5,
                                                 line=dict(width=2,
                                                           color='red')))
     fig.add_scatter(x=x_coords_c2, y=y_coords_c2, mode="markers", name="W2",
@@ -376,7 +480,7 @@ def plotly_coords(c1_coords, c2_coords, path=None, c1_corrected=None, title=""):
                                  line=go.scatter.Line(color="white"),
                                  name="{}".format(i), showlegend=False))
     if path is not None:
-        fig.write_html(path + "/input/beads_{}.html".format(title))
+        fig.write_html(path + "/beads_{}.html".format(title))
         fig.data = list()
     else:
         fig.show()
@@ -405,8 +509,8 @@ def create_beads_stacks(path_to_beads):
         pass
 
 
-def detection(path_to_save, image_name, ndimage, pims_frames, percentile, min_mass_cutoff, max_mass_cutoff,
-              verbose=True, test=False):
+def detection(path_to_save, image_name, ndimage, pims_frames, diameter, percentile, min_mass_cutoff, max_mass_cutoff,
+              verbose=True, test=False, plot=False):
     """
     Spot selection using Trackpy.
 
@@ -418,7 +522,8 @@ def detection(path_to_save, image_name, ndimage, pims_frames, percentile, min_ma
     max_mas_cutoff:
     """
     # SPOT DETECTION
-    f = tp.batch(pims_frames[:], diameter=11, percentile=percentile, engine='numba')
+    tp.quiet()
+    f = tp.batch(pims_frames[:], diameter=diameter, percentile=percentile, engine='auto')
     f.loc[:, "ID"] = list(range(1, f.shape[0] + 1))
     f.loc[:, 'size'] = f['size'].apply(lambda x: x ** 2)  # remove sqrt from size formula
     # Select spots with a cumulative density probability less than a threshold
@@ -440,19 +545,22 @@ def detection(path_to_save, image_name, ndimage, pims_frames, percentile, min_ma
         if not os.path.exists(path_to_save + "selection_test/detected_spots/"):
             os.mkdir(path_to_save + "selection_test/detected_spots/")
         # PLOT: (mass according to selection) and html with selected spots for each channel
-        plot_mass(path_to_save + "selection_test/detected_spots/", f, image_name)
+        # plot_mass(path_to_save + "selection_test/detected_spots/", f, image_name)
         save_html_selected_detection(path_to_save + "selection_test/detected_spots/", f, image_name, ndimage, percentile,
                                      max_mass_cutoff, min_mass_cutoff)
-    else:
+    if plot:
         # Plot selected spots
+        if not os.path.exists(path_to_save + "/intensities/"):
+            os.mkdir(path_to_save + "/intensities/")
         plot_mass(path_to_save + "/intensities/", f, image_name)
-        save_html_selected_detection(path_to_save + "/detected_spots/", f, image_name, ndimage, percentile,
-                                     min_mass_cutoff, max_mass_cutoff)
+        if not os.path.exists(path_to_save + "/detected_spots/"):
+            os.mkdir(path_to_save + "/detected_spots/")
+        save_html_selected_detection(path_to_save + "/detected_spots/", f, image_name, ndimage, percentile, min_mass_cutoff, max_mass_cutoff)
     return f
 
 
 def linking(path_to_beads, f_batch_selection, image_name, ndarray, link, percentile, min_mass_cutoff, max_mass_cutoff,
-            test=False):
+            px_size, test=False, plot=False):
     """
     Linking (pairing) detected particles from two channels (0/red/W1 and 1/green/W2)
     Selecting only paired detections between two channels and saving selections to files.
@@ -463,35 +571,26 @@ def linking(path_to_beads, f_batch_selection, image_name, ndarray, link, percent
     f_batch = f_batch_selection.copy()
     f_batch.loc[:, "selected"] = np.where(f_batch.ID.isin(t.ID.tolist()), "sel",
                                           "non-sel")
-    # PLOT selected after linking the two channels
-    save_html_selected_detection(path_to_beads + "/linked_spots/", f_batch, image_name, ndarray,
-                                 percentile, min_mass_cutoff, max_mass_cutoff)
 
     # Separate frame0 and frame1 in two df
     t_W1 = t[t["frame"] == 0]
     t_W2 = t[t["frame"] == 1]
 
     # Save coordinates in separate csv files
-    t_W1[["x", "y"]].to_csv(path_to_beads + "/linked_spots/" +
-                            "detected_{}_W1.csv".format(image_name.split("_")[1]),
-                            sep="\t",
-                            encoding="utf-8", header=True, index=False)
-    t_W2[["x", "y"]].to_csv(path_to_beads + "/linked_spots/" +
-                            "detected_{}_W2.csv".format(image_name.split("_")[1]),
-                            sep="\t",
-                            encoding="utf-8", header=True, index=False)
-    # PLOT INITIAL DISTANCE DISTRIBUTION
-    t_W1, t_W2 = t_W1.copy(), t_W2.copy()
-    t_W1.loc[:, "distances"] = calculate_distances(t_W1, t_W2)
-    t_W2.loc[:, "distances"] = calculate_distances(t_W1, t_W2)
-    if test:
-        if not os.path.exists(path_to_beads + "selection_test/linked_spots/"):
-            os.mkdir(path_to_beads + "selection_test/linked_spots/")
-        plot_distance_distribution(path_to_beads + "selection_test/linked_spots/", t_W1, image_name)
-    else:
-        if not os.path.exists(path_to_beads + "/linked_spots/"):
-            os.mkdir(path_to_beads + "/linked_spots/")
-        plot_distance_distribution(path_to_beads + "/linked_spots/", t_W1, image_name)
+
+    if plot:
+        if not os.path.exists(path_to_beads + "linked_spots/"):
+            os.mkdir(path_to_beads + "linked_spots/")
+        t_W1[["x", "y"]].to_csv(path_to_beads + "linked_spots/" +
+                                "detected_{}_W1.csv".format(image_name.split("_")[1]),
+                                sep="\t",
+                                encoding="utf-8", header=True, index=False)
+        t_W2[["x", "y"]].to_csv(path_to_beads + "linked_spots/" +
+                                "detected_{}_W2.csv".format(image_name.split("_")[1]),
+                                sep="\t",
+                                encoding="utf-8", header=True, index=False)
+        # PLOT selected after linking the two channels
+        save_html_selected_detection(path_to_beads + "/linked_spots/", f_batch, image_name, ndarray, percentile, min_mass_cutoff, max_mass_cutoff)
 
     return t_W1, t_W2
 
@@ -553,23 +652,29 @@ def prepare_data(working_dir, path_to_beads, rfp_channel, gfp_channel):
     print("\n\t...DONE!\n")
 
 
-def piecewise_affine(query_spot, c1_ref_beads, c2_ref_beads, search_range, min_candidates=10):
+def piecewise_affine(query_spot, c1_ref_beads, c2_ref_beads, search_range, min_candidates=10, max_iterations=3):
     """
     Apply piecewise affine transform to query spot
     using 2C reference.
     Returns the local refined coordinates of the query.
     """
     search = True
+    iterations = 0
     # Search closest neighbors with a minimum number of candidates
     # Keep the search until it gets the proper distance to get the min number of candidates
     while search:
         # Get closest neighbors
         d, ids = spatial.KDTree(c2_ref_beads).query(query_spot, search_range)
         ids = ids[d < search_range]
+        # print(ids)
         if len(ids) >= min_candidates:
             search = False
         else:
-            search_range += 10
+            if iterations <= max_iterations:
+                search_range += 10
+                iterations += 1
+            else:
+                return [np.nan, np.nan]
 
     candidates_c1 = c1_ref_beads[ids]
     candidates_c2 = c2_ref_beads[ids]
@@ -584,8 +689,8 @@ def piecewise_affine(query_spot, c1_ref_beads, c2_ref_beads, search_range, min_c
     return refined_spot
 
 
-def get_coords(path_to_save, path_to_beads, beads_head, separation, percentile,
-               min_mass_cutoff, max_mass_cutoff, verbose=True):
+def get_coords(path_to_save, path_to_beads, beads_head, diameter, separation, percentile,
+               min_mass_cutoff, max_mass_cutoff, px_size, verbose=True, plot=False):
     """
     Method to get coordinates from a set of 2C (2 channel)
     images of beads defined in the path
@@ -601,44 +706,52 @@ def get_coords(path_to_save, path_to_beads, beads_head, separation, percentile,
         percentile: selecting spots in the upper bound of this percentile
         min_mass_cutoff
         max_mass_cutoff
-        beads_only: running only on the bead distances (short - close to zero),
-         when option is -o beads.
+        px_size
+        plot: if True, it will generate all plots for intensities
     """
     if verbose:
         print("\n#############################\n"
               "     BEADS REGISTRATION \n"
               "#############################\n")
+
+    # Save coords in lists
     x_coords_W1 = list()
     y_coords_W1 = list()
     x_coords_W2 = list()
     y_coords_W2 = list()
 
     # Everything is ok now for the analysis
-    for img in glob.glob(path_to_beads + beads_head):
-        # READ IMAGE, set name and image number, use PIMS to read frames
-        name = img.split("/")[-1].split(".")[0]
-        frames = pims.open(img)
+    for img in sorted(glob.glob(path_to_beads + beads_head)):
+        try:
+            # READ IMAGE, set name and image number, use PIMS to read frames
+            name = img.split("/")[-1].split(".")[0]
+            print(f"\n\n\tProcessing image {name}\n")
+            frames = pims.open(img)
 
-        # SPOT DETECTION
-        f_batch = detection(path_to_save, name, io.imread(img), frames, percentile, min_mass_cutoff, max_mass_cutoff,
-                            verbose)
+            # SPOT DETECTION
+            f_batch = detection(path_to_save, name, io.imread(img), frames, diameter, percentile, min_mass_cutoff,
+                                max_mass_cutoff, verbose, plot=plot)
 
-        # LINK SELECTION
-        f_batch_sel = f_batch[f_batch['selected'] == "sel"].drop(columns=["selected"])
-        paired_df_W1, paired_df_W2 = linking(path_to_save, f_batch_sel, name, io.imread(img), separation, percentile,
-                                             min_mass_cutoff, max_mass_cutoff)
+            # LINK SELECTION
+            f_batch_sel = f_batch[f_batch['selected'] == "sel"].drop(columns=["selected"])
+            paired_df_W1, paired_df_W2 = linking(path_to_save, f_batch_sel, name, io.imread(img), separation, percentile,
+                                                 min_mass_cutoff, max_mass_cutoff, px_size=px_size, plot=plot)
 
-        # Append x and y coordinates to lists
-        x_coords_W1 += paired_df_W1.x.tolist()
-        y_coords_W1 += paired_df_W1.y.tolist()
-        x_coords_W2 += paired_df_W2.x.tolist()
-        y_coords_W2 += paired_df_W2.y.tolist()
+
+            # Append x and y coordinates to lists
+            x_coords_W1 += paired_df_W1.x.tolist()
+            y_coords_W1 += paired_df_W1.y.tolist()
+            x_coords_W2 += paired_df_W2.x.tolist()
+            y_coords_W2 += paired_df_W2.y.tolist()
+        except:
+            pass
 
     # Ref and Mov coordinates
     c2_coords = np.asarray(list(zip(x_coords_W2, y_coords_W2)))
     c1_coords = np.asarray(list(zip(x_coords_W1, y_coords_W1)))
 
     # Save coords to csv
+    
     np.savetxt(path_to_save + "/coords_W1.csv", c1_coords, delimiter=",", header="x,y")
     np.savetxt(path_to_save + "/coords_W2.csv", c2_coords, delimiter=",", header="x,y")
 
@@ -647,125 +760,6 @@ def get_coords(path_to_save, path_to_beads, beads_head, separation, percentile,
 
 if __name__ == "__main__":
 
-
-
-
-
-    # beads_path = "../Exo70-Sec5/input/beads"
-    # test_path = "../Exo70-Sec5/input/test"
-    # pc = 80  # in tant per cent
-    # max_mass = 0.95  # in tant per 1
-    # min_mass = 0.01  # in tant per 1
-    # # Separate frames and create pair stack of beads
-    # # create_beads_stacks(f"{beads_path}")
-    #
-    # verbose = True
-    #
-    # # Define REF and TEST
-    # # REF (bead image)--> ch1/ch2 (mov/ref) channels to create transformation matrices
-    # # TEST  (bead image)--> ch1/ch2 to test the registration error
-    # c2_ref, c1_ref = get_coords(beads_path, f"{beads_path}/frame*.tif", pc, min_mass, max_mass)
-    # c2_test, c1_test = get_coords(test_path, f"{test_path}/*.tif",  pc, min_mass, max_mass)
-    # # Plot REF & TEST coords
-    # plotly_coords("../Exo70-Sec5", c1_ref, c2_ref, title=f"2C REF coordinates\n N={len(c2_ref)}")
-    # plotly_coords("../Exo70-Sec5", c1_test, c2_test, title=f"2C TEST coordinates\n N={len(c2_test)}")
-    # # Get new coords
-    # c1_test_new = np.empty_like(c1_test)
-    # for i in range(len(c1_test)):
-    #     c1_test_new[i] = piecewise_affine(c1_test[i], c1_ref, c2_ref, search_range=40, min_candidates=5)
-    # # Plotly
-    # plotly_coords("../Exo70-Sec5", c1_test, c2_test, c1_test_new, title=f"2C TEST WARPED\n N={len(c1_test)}")
-    #
-    # # Plot Distance distribution
-    # fig, ax = plt.subplots()
-    # sns.set(font_scale=1)
-    # sns.set_style("whitegrid", {'axes.grid': False})
-    # sns.despine()
-    # sns.histplot(data=ddist(c2_test, c1_test), kde=True, color="sandybrown", ax=ax, fill=True, stat="density",
-    #              label="initial_distances")
-    # sns.histplot(data=ddist(c2_test, c1_test_new), kde=True, color="tomato", ax=ax, fill=True, stat="density",
-    #              label="transformed")
-    # ax.set_xlabel("$d(nm)$")  # , fontsize=11, labelpad=30)
-    # ax.set_ylabel("$Density$")  # , fontsize=45, labelpad=30)
-    # ax.legend()
-    # plt.tight_layout()
-    # plt.savefig("../Exo70-Sec5/input/dsit.png")
-    #
-    # # CALCULATE TRE
-    # tre_ = c1_test_new - c2_test
-    # diff_x, diff_y = tre_[:, 0], tre_[:, 1]
-    # df = pd.DataFrame({"x_W2": c2_test[:, 0],
-    #                    "y_W2": c2_test[:, 1],
-    #                    "x_W1": c1_test[:, 0],
-    #                    "y_W1": c1_test[:, 1],
-    #                    "diff_x": diff_x * 64.5,
-    #                    "diff_y": diff_y * 64.5})
-    #
-    # # Gaussian fit to x and y data
-    # data_x, data_y = df.diff_x.to_list(), df.diff_y.to_list()
-    # mu_x, sigma_x = stats.norm.fit(df.diff_x.to_list())
-    # mu_y, sigma_y = stats.norm.fit(df.diff_y.to_list())
-    #
-    # # ---------#
-    # # Plot the fit
-    # # x offset
-    # figx, ax = plt.subplots()
-    # sns.histplot(data=data_x, kde=True, color="grey", ax=ax, fill=True, stat="density",
-    #              label=f"$\mu_x$ = {round(mu_x, 3)}\n$\sigma_x$ = {round(sigma_x, 3)}\nn = {len(data_x)}")
-    # plt.plot(np.arange(min(data_x), max(data_x), 1),
-    #          stats.norm.pdf(np.arange(min(data_x), max(data_x), 1),
-    #                         loc=mu_x, scale=sigma_x), c='r', label="Gauss fit", linestyle='--')
-    # ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
-    # plt.tight_layout()
-    # plt.savefig("../Exo70-Sec5/input/ddsit_x.png")
-    # plt.clf()
-    #
-    # # y offset
-    # figy, ax = plt.subplots()
-    # sns.histplot(data=data_y, kde=True, color="grey", ax=ax, fill=True, stat="density",
-    #              label=f"$\mu_y$ = {round(mu_y, 3)}\n$\sigma_y$ = {round(sigma_y, 3)}\nn = {len(data_y)}")
-    # plt.plot(np.arange(min(data_y), max(data_y), 1),
-    #          stats.norm.pdf(np.arange(min(data_y), max(data_y), 1),
-    #                         loc=mu_y, scale=sigma_y), c='r', label="Gauss fit", linestyle='--')
-    # ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
-    # plt.tight_layout()
-    # plt.savefig("../Exo70-Sec5/input/ddist_y.png")
-    # plt.clf()
-    #
-    # # ---------#
-    # # TRE
-    # mean_x = np.mean(df.diff_x.to_numpy())
-    # mean_y = np.mean(df.diff_y.to_numpy())
-    # tre = np.sqrt(mean_x ** 2 + mean_y ** 2)
-    # print(f"mean_x =  {np.round(mean_x, 3)} nm \n")
-    # print(f"mean_y =  {np.round(mean_y, 3)} nm \n")
-    # print(f"TRE = {np.round(tre, 3)} nm")
-    #
-    # # X shift
-    # ax1 = sns.scatterplot(data=df, x="x_W2", y="y_W2", hue="diff_x", palette="RdBu")
-    # norm = plt.Normalize(df['diff_x'].min(), df['diff_x'].max())
-    # sm = plt.cm.ScalarMappable(cmap="RdBu", norm=norm)
-    # sm.set_array([])
-    #
-    # # Remove the legend and add a colorbar
-    # ax1.get_legend().remove()
-    # ax1.figure.colorbar(sm)
-    # ax1.invert_yaxis()
-    # plt.savefig("../Exo70-Sec5/input/offset_x.png")
-    # plt.clf()
-    #
-    # # Y shift
-    # ax2 = sns.scatterplot(data=df, x="x_W2", y="y_W2", hue="diff_y", palette="RdBu")
-    # norm = plt.Normalize(df['diff_y'].min(), df['diff_y'].max())
-    # sm = plt.cm.ScalarMappable(cmap="RdBu", norm=norm)
-    # sm.set_array([])
-    #
-    # # Remove the legend and add a colorbar
-    # ax2.get_legend().remove()
-    # ax2.figure.colorbar(sm)
-    # ax2.invert_yaxis()
-    # plt.savefig("../Exo70-Sec5/input/offset_y.png")
-    # plt.clf()
 
     sys.exit()
 

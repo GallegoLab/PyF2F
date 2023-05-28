@@ -23,7 +23,7 @@ from lmfit import Parameters, minimize
 # ======================
 
 
-def read_csv_2(file):
+def custom_gaussian_read_csv(file):
     """
     Function to read multiple csv (input data)
     """
@@ -203,11 +203,20 @@ def save_html_gaussian(path_to_save, channel_image, sub_df, img_num, channel_nam
     fig_label_cont.write_html(path_to_save + "gaussian_fit/" + "image_{}_{}.html".format(img_num, channel_name))
 
 
-def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size):
+def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size, dirty=False):
     """
     2) Main method to run gaussian fitting on spots sorted from
     yeast segmentation method. Selection is based on R^2 (goddness
     of the gaussian fit).
+
+    Parameters
+    ------------
+    :param images_dir: path to images directory for images BGN subtracted
+    :param results_dir: path to results directory
+    :param figures_dir: path to figures directory
+    :param gaussian_cutoff: cutoff of the goodness of the gaussian fit
+    :param px_size: pixel size of the camera
+    :param dirty: generate HTML files for each image with selected spots
     """
     print("#############################\n"
           " Gaussian Fitting Selection \n"
@@ -300,9 +309,10 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
                          "spots selected.. --> {} %".format(image_number, num_selected, len(spots_df_W1), percent_sel))
             total_selected += num_selected
 
-            # Save figure with selected and non-selected spots based on goodness of the gaussian fit
-            save_html_gaussian(figures_dir, W1, sub_df_W1, image_number, "W1")
-            save_html_gaussian(figures_dir, W2, sub_df_W2, image_number, "W2")
+            if dirty:
+                # Save figure with selected and non-selected spots based on goodness of the gaussian fit
+                save_html_gaussian(figures_dir, W1, sub_df_W1, image_number, "W1")
+                save_html_gaussian(figures_dir, W2, sub_df_W2, image_number, "W2")
 
             # Save df as csv: gaussian.csv
             if not os.path.exists(results_dir):
@@ -359,9 +369,9 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     #####################################
     print("\nPlotting Gaussian selection....\n")
     # Load data ensuring that W1 & W2 are paired
-    df_W1 = pd.concat(map(read_csv_2, sorted(glob.glob(results_dir + "gaussian_fit/all*W1*"))),
+    df_W1 = pd.concat(map(custom_gaussian_read_csv, sorted(glob.glob(results_dir + "gaussian_fit/all*W1*"))),
                       ignore_index=True)
-    df_W2 = pd.concat(map(read_csv_2, sorted(glob.glob(results_dir + "gaussian_fit/all*W2*"))),
+    df_W2 = pd.concat(map(custom_gaussian_read_csv, sorted(glob.glob(results_dir + "gaussian_fit/all*W2*"))),
                       ignore_index=True)
     # Combine W1&W2 data into a df and label selected
     df_data = pd.concat([df_W1.r2_gaussian.rename("r2_W1"), df_W2.r2_gaussian.rename("r2_W2")], axis=1)
@@ -381,12 +391,13 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     ax.set(ylim=(0, 1))
 
     fig.savefig(figures_dir + "gaussian.png", dpi=150)
+    plt.clf()
 
     # MEASURE DISTANCE DISTRIBUTION AFTER GAUSSIAN
     initial_distances = np.loadtxt(results_dir + "distances_after_warping.csv")
-    df_W1 = pd.concat(map(read_csv_2, sorted(glob.glob(results_dir + "gaussian_fit/detected_gauss*W1*"))),
+    df_W1 = pd.concat(map(custom_gaussian_read_csv, sorted(glob.glob(results_dir + "gaussian_fit/detected_gauss*W1*"))),
                       ignore_index=True)
-    df_W2 = pd.concat(map(read_csv_2, sorted(glob.glob(results_dir + "gaussian_fit/detected_gauss*W2*"))),
+    df_W2 = pd.concat(map(custom_gaussian_read_csv, sorted(glob.glob(results_dir + "gaussian_fit/detected_gauss*W2*"))),
                       ignore_index=True)
     distances_gauss = calculate_distances(df_W1, df_W2, px_size=px_size)
     np.savetxt(results_dir + "gaussian_fit/gauss_distances.csv", distances_gauss, delimiter=",")
@@ -412,6 +423,7 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     # ax.axvline(x=np.mean(initial_distances), color='sandybrown', ls='--', lw=2.5, alpha=0.8)
     # ax.axvline(x=np.mean(distances_gauss), color='cornflowerblue', ls='--', lw=2.5, alpha=0.8)
     plt.savefig(figures_dir + "gaussian_fit/" + "distances_after_gauss.png")
+    plt.clf()
 
     return total_data, total_selected
 

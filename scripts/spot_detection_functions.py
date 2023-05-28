@@ -7,15 +7,15 @@ from detect_beads import select_mass_cdf
 import numpy as np
 
 
-def detect_spots(path_to_folder, bgn_img, radius, percentile,
-                 max_mass_cutoff=0.95, min_mass_cutoff=0.05, verbose=False, mass_selection=False):
+def detect_spots(path_to_folder, bgn_img, diameter, percentile,
+                 max_mass_cutoff=None, min_mass_cutoff=None, verbose=False, mass_selection=False):
     """
     Method for spot detection from already Background Subtracted images.
     Parameters
     ----------
     bgn_img: name of the background subtracted image
     path_to_folder
-    radius: float. Radius in pixels of the spots to search.
+    diameter: float. Diameter in pixels of the spots to search.
     percentile: float. Percentile (%) that determines which bright pixels are accepted as "spots".
     max_mass_cutoff: float. Reject the upper right of this cutoff (in tant per 1)
     min_mass_cutoff: float. Reject the upper left  of this cutoff (in tant per 1)
@@ -38,10 +38,10 @@ def detect_spots(path_to_folder, bgn_img, radius, percentile,
     if verbose:
         print("\t\t{} frames in stack...\n".format(len(frames)))
         print("# SPOT DETECTION with Trackpy...\n\n\t# READING DATA...\n\n"
-              "\t\tParticle radius = {}\n"
-              "\t\tPercentile = {}\n\n".format(radius, percentile))
+              "\t\tParticle diameter = {}\n"
+              "\t\tPercentile = {}\n\n".format(diameter, percentile))
 
-    f_batch = tp.batch(frames[:], radius, percentile=percentile, engine='python')
+    f_batch = tp.batch(frames[:], diameter, percentile=percentile, engine='python')
     f_batch = f_batch.rename(columns={"x": "y", "y": "x"})  # change x,y order
     f_batch['size'] = f_batch['size'].apply(lambda x: x ** 2)  # remove sqrt from size formula
     f_batch["img"] = img_num

@@ -36,11 +36,10 @@ def display_side_by_side(*args, titles=cycle([''])):
     display_html(html_str, raw=True)
 
 
-def read_csv_2(file):
+def custom_kde_read_csv(file):
     """
     Function to read multiple csv (input data)
     """
-    # cols = ["img", "x", "y", "mass", "size", "ecc"]  # "img",
     df = pd.read_csv(file, sep="\t")  # sep="\t"
     return df
 
@@ -99,9 +98,9 @@ def load_data_for_kde(results_dir, figures_dir, px_size):
                          'Thanks! ;)\n\n')
         sys.exit(1)
     # Loading segmented coordinates
-    df_W1 = pd.concat(map(read_csv_2, sorted(glob.glob(f"{results_dir}segmentation/detected_seg_*W1*"))),
+    df_W1 = pd.concat(map(custom_kde_read_csv, sorted(glob.glob(f"{results_dir}segmentation/detected_seg_*W1*"))),
                       ignore_index=True)
-    df_W2 = pd.concat(map(read_csv_2, sorted(glob.glob(f"{results_dir}segmentation/detected_seg_*W2*"))),
+    df_W2 = pd.concat(map(custom_kde_read_csv, sorted(glob.glob(f"{results_dir}segmentation/detected_seg_*W2*"))),
                       ignore_index=True)
 
     # Add ID to each data point (spot) so the paired spots are paired
@@ -120,6 +119,7 @@ def load_data_for_kde(results_dir, figures_dir, px_size):
     if not os.path.isdir(figures_dir + "kde/"):
         os.mkdir(figures_dir + "kde/")
     plt.savefig(figures_dir + "kde/distances_before_gaussian.png")
+    plt.clf()
 
     # Multiply ecc by 10 to have same magnitude as m2 (plotting format)
     df_W1["ecc"] *= 10
@@ -411,6 +411,7 @@ def plot_kde(df_W1, df_W2, df_data, figures_dir, results_dir):
     # ax.axvline(x=np.mean(initial_distances), color='sandybrown', ls='--', lw=2.5, alpha=0.8)
     # ax.axvline(x=np.mean(distances_kde), color='cornflowerblue', ls='--', lw=2.5, alpha=0.8)
     plt.savefig(figures_dir + "kde/" + "distances_after_kde.png")
+    plt.clf()
 
 
 def save_html_kde(path_to_save, channel_image, sub_df, img_num, channel_name):
@@ -470,7 +471,7 @@ def save_html_kde(path_to_save, channel_image, sub_df, img_num, channel_name):
     fig_label_cont.write_html(path_to_save + "kde/" + "image_{}_{}.html".format(img_num, channel_name))
 
 
-def main_kde(images_dir, results_dir, figures_dir, kde_cutoff, px_size):
+def main_kde(images_dir, results_dir, figures_dir, kde_cutoff, px_size, dirty=False):
     """
     3) Main method to run 2D-KDE based on the spot properties
      "second momentum of intensity" and "eccentricity".
@@ -479,10 +480,12 @@ def main_kde(images_dir, results_dir, figures_dir, kde_cutoff, px_size):
 
     Parameters
     ------------
-    images_dir: path to images directory for images BGN subtracted
-    results_dir: path to results directory
-    figures_dir: path to figures directory
-    kde_cutoff: density cutoff for KDE selection
+    :param images_dir: path to images directory for images BGN subtracted
+    :param results_dir: path to results directory
+    :param figures_dir: path to figures directory
+    :param kde_cutoff: density cutoff for KDE selection
+    :param px_size: pixel size of the camera
+    :param dirty: generate HTML files for each image with selected spots
     """
     start = time.time()
     logging.info("\n\n####################################\n"
@@ -493,17 +496,18 @@ def main_kde(images_dir, results_dir, figures_dir, kde_cutoff, px_size):
           "########################################\n\n")
     df_W1, df_W2, df_data = load_data_for_kde(results_dir, figures_dir, px_size)
     df_W1_final, df_W2_final, df_data_final = kde(results_dir, df_W1, df_W2, df_data, kde_cutoff)
-    # Save figure with selected and non-selected spots based on KDE
-    for img_ in glob.glob(images_dir + "image_*"):
-        image_number = img_.split("/")[-1].split(".")[0].split("_")[1]
-        W1 = imread(img_)[0, :, :]
-        W2 = imread(img_)[1, :, :]
-        df_W1_final_sub = df_W1_final[(df_W1_final["img"] == image_number)]
-        df_W2_final_sub = df_W2_final[(df_W2_final["img"] == image_number)]
-        if df_W1_final_sub.shape[0] != 0:
-            save_html_kde(figures_dir, W1, df_W1_final_sub, image_number, "W1")
-        if df_W2_final_sub.shape[0] != 0:
-            save_html_kde(figures_dir, W2, df_W2_final_sub, image_number, "W2")
+    if dirty:
+        # Save figure with selected and non-selected spots based on KDE
+        for img_ in glob.glob(images_dir + "image_*"):
+            image_number = img_.split("/")[-1].split(".")[0].split("_")[1]
+            W1 = imread(img_)[0, :, :]
+            W2 = imread(img_)[1, :, :]
+            df_W1_final_sub = df_W1_final[(df_W1_final["img"] == image_number)]
+            df_W2_final_sub = df_W2_final[(df_W2_final["img"] == image_number)]
+            if df_W1_final_sub.shape[0] != 0:
+                save_html_kde(figures_dir, W1, df_W1_final_sub, image_number, "W1")
+            if df_W2_final_sub.shape[0] != 0:
+                save_html_kde(figures_dir, W2, df_W2_final_sub, image_number, "W2")
     # Plot KDE results only if a minimum of N=20 paired-spots.
     # This step prevents having singular covariance matrices when plotting
     if len(df_data_final) > 20:
