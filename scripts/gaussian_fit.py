@@ -253,8 +253,8 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
         W2 = image[1]
         # Load spot coordinates for W1 and W2 for the given image
         # print(data_seg_W1.head())
-        spots_df_W1 = data_seg_W1[data_seg_W1.img == image_id]
-        spots_df_W2 = data_seg_W2[data_seg_W2.img == image_id]
+        spots_df_W1 = data_seg_W1[data_seg_W1.img == int(image_id)]
+        spots_df_W2 = data_seg_W2[data_seg_W2.img == int(image_id)]
         # Make sure that the number of spots in the image is not 0
         if len(spots_df_W1) != 0 and len(spots_df_W1) != 1:
             total_data += spots_df_W1.shape[0]
