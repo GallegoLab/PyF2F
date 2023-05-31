@@ -179,7 +179,7 @@ parsero = parser.parse_args()
 dataset = parsero.dataset                       # Working Directory
 input_dir = dataset + "input/"                  # where beads and PICT images are located
 pict_images_dir = input_dir + "pict_images/"
-beads_dir = input_dir + "reg_out/"
+beads_dir = input_dir + "out_reg/"
 output_dir = dataset + "output/"                # the output of the pipeline will be saved here.
 images_dir = output_dir + "images/"             # Pre-processed images are saved here.
 spots_dir = output_dir + "spots/"               # Detected spots for each channel and warped coordinates are saved here.
@@ -271,7 +271,7 @@ save_preprocessed = True                            # save preprocessed images a
 save_compressed = False                             # save a compressed RLE version of the masks for sharing
 save_masks = False                                  # save the full masks
 output_imagej = False                               # output ImageJ-compatible masks
-save_contour = False                                # Save contour images
+save_contour = True                                 # Save contour images
 save_contour_mod = True                             # Save contour modified images
 
 # Set up logging files
