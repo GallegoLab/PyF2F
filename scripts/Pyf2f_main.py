@@ -234,7 +234,7 @@ if sel_option == 'kde' or 'kde' in sel_option.split(','):
     kde = True
 if sel_option == 'gaussian' or 'gaussian' in sel_option.split(','):
     gaussian_fit = True
-if sel_option == 'outlier' or 'outlier' in sel_option.split(','):
+if sel_option == 'mle' or 'mle' in sel_option.split(','):
     mle = True
 
 # ==============
