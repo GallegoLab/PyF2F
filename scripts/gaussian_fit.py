@@ -368,8 +368,8 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     # PLOT SELECTED SPOTS AFTER GAUSSIAN
     #####################################
     print("\nPlotting Gaussian selection....\n")
-    if not os.path.exists(path_to_save + "gaussian_fit/"):
-        os.mkdir(path_to_save + "gaussian_fit/")
+    if not os.path.exists(figures_dir + "gaussian_fit/"):
+        os.mkdir(figures_dir + "gaussian_fit/")
     # Load data ensuring that W1 & W2 are paired
     df_W1 = pd.concat(map(custom_gaussian_read_csv, sorted(glob.glob(results_dir + "gaussian_fit/all*W1*"))),
                       ignore_index=True)
