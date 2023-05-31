@@ -12,8 +12,8 @@ import numpy as np
 np.random.seed(seed)
 import tensorflow as tf
 
-# tf.set_random_seed(seed)
-tf.random.set_seed(seed)
+tf.set_random_seed(seed)
+#tf.random.set_seed(seed)
 
 import random
 
