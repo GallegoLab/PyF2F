@@ -124,8 +124,8 @@ the GFP and RFP fluorophores using Single-molecule High-REsolution Colocalizatio
 
 ```bash
   $ python3 Pyf2f_main.py -h
-```
-        Pipeline to estimate the distance between a fluorophore fused to the termini
+
+Pipeline to estimate the distance between a fluorophore fused to the termini
 of a protein complex and a reference fluorophore in the anchor in living
 yeast(see PICT method in Picco et al., 2017)
 
