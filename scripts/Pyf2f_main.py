@@ -215,7 +215,7 @@ if sel_option == 'all':
     bead_registration = True
     preprocessing = True
     detect_spots = True
-    warping = True
+    warping_transformation = True
     segmentation_preprocess = True
     gaussian_fit = True
     kde = True
@@ -227,7 +227,7 @@ if sel_option == 'pp' or 'pp' in sel_option.split(','):
 if sel_option == 'spt' or 'spt' in sel_option.split(','):
     detect_spots = True
 if sel_option == 'warping' or 'warping' in sel_option.split(','):
-    warping = True
+    warping_transformation = True
 if sel_option == 'segment' or 'segment' in sel_option.split(','):
     segmentation_preprocess = True
 if sel_option == 'kde' or 'kde' in sel_option.split(','):
