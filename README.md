@@ -89,14 +89,14 @@ The package has the following structure:
     PyF2F-Ruler/
       README.md
       scripts/
-          run_pyf2f.sh               (running PyF2F-Ruler)
-          calculate_PICT_distances.py
+          run_pyf2f.sh               (running PyF2F-Ruler using a bash script)
+          functions.py               
           custom.py
           gaussian_fit.py
           kde.py
           lle.py
           rnd.py
-          measure_pict_distances.py  
+          Pyf2f_main.py              (main script)
           options.py                 (User selections)
           outlier_rejections.py
           segmentation_pp.py
@@ -104,10 +104,11 @@ The package has the following structure:
           mrcnn/                      (YeastSpotter)
           weights/                    (for mrcnn yeast segmentation)  
               
-      test/
+      example/
           input/
-              pict_images/            (5 images from the exocyst dataset)
-              beads/                  (the beads used on the exocyst dataset)
+              pict_images/            (21 images from Picco et al., 2017)
+              reg/                    (beads set to create the registration map)
+              test/                   (beads set to test the registration)
 
 
 Image Analysis Tutorial
@@ -122,37 +123,76 @@ the GFP and RFP fluorophores using Single-molecule High-REsolution Colocalizatio
 #### Command line arguments
 
 ```bash
-  $ python3 measure_pict_distances.py -h
+  $ python3 Pyf2f_main.py -h
 ```
-        Computing the distance distribution between fluorophores tagging the protein
-        complex (e.g, exocyst) with a precision up to 5 nm.
-        
-        optional arguments:
-          -h, --help            show this help message and exit
-          -d DATASET, --dataset DATASET
-                                Name of the dataset where the input/ directory is
-                                located
-          --test                Runs the test dataset
-          -o OPTION, --option OPTION
-                                Option to process: 'all' (whole workflow), 'beads'
-                                (bead registration), 'pp' (preprocessing), 'spt' (spot
-                                detection and linking), 'warping' (transform XY spot
-                                coordinates using the beads warping matrix), 'segment'
-                                (yeast segmentation), 'gaussian' (gaussian fitting),
-                                'kde' (2D Kernel Density Estimate), 'outlier (outlier
-                                rejection using the MLE)'. Default: 'main'
+        Pipeline to estimate the distance between a fluorophore fused to the termini
+of a protein complex and a reference fluorophore in the anchor in living
+yeast(see PICT method in Picco et al., 2017)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATASET, --dataset DATASET
+                        Name of the main directory where the dataset is
+                        located
+  --px_size PX_SIZE     Pixel size of the camera (nanometers)
+  --rolling_ball_radius ROLLING_BALL_RADIUS
+                        Rolling Ball Radius (pixels)
+  --median_filter MEDIAN_FILTER
+                        Median Radius (pixels)
+  --particle_diameter PARTICLE_DIAMETER
+                        For spot detection. Must be an odd number
+  --percentile PERCENTILE
+                        Percentile that determines which bright pixels are
+                        accepted as spots.
+  --max_displacement MAX_DISPLACEMENT
+                        Median Radius (pixels)
+  --local_transformation
+                        Use local affine (piecewise) transformation instead of
+                        global affine.
+  --contour_cutoff CONTOUR_CUTOFF
+                        Max distance to cell contour (pixels)
+  --neigh_cutoff NEIGH_CUTOFF
+                        Max distance to closest neighbour (pixels)
+  --kde_cutoff KDE_CUTOFF
+                        Spots with this probability to be found in the
+                        population
+  --gaussian_cutoff GAUSSIAN_CUTOFF
+                        Spots with this probability to be found in the
+                        population
+  --mle_cutoff MLE_CUTOFF
+                        In the MLE, tant per cent of the distribution assumed
+                        to be ok. Outlier search in the right '1 - value' area
+                        of the distance distribution
+  --reject_lower REJECT_LOWER
+                        In the MLE, reject selected values under this
+                        threshold
+  --mu_ini MU_INI       Initial guess for mu search in the MLE
+  --sigma_ini SIGMA_INI
+                        Initial guess for sigma search in the MLE
+  --dirty               Generates an html file to show the spots
+                        selected/rejected in each image for each step of the
+                        process. Consumes more time, memory, and local space.
+  --verbose             Informs in the terminal what the program is doing at
+                        each step
+  -o OPTION, --option OPTION
+                        Option to process: 'all' (whole workflow), 'beads'
+                        (bead registration), 'pp' (preprocessing), 'spt' (spot
+                        detection and linking), 'warping' (transform XY spot
+                        coordinates using the beads registration map),
+                        'segment' (yeast segmentation), 'kde' (2D Kernel
+                        Density Estimate), 'gaussian' (gaussian fitting), 'mle
+                        (outlier rejection using the MLE)'. Default: 'all'
 
 
-1) Run a test to check that everything is installed and running as expected:
+
+1) Run PyF2F-Ruler with the `example` dataset:
 
 ```bash
   $ conda activate {ENV_NAME}  # Make sure to activate your conda environment
-  $ python3 measure_pict_distances.py --test 
+  $ python3 Pyf2f_main.py [PARAMS][OPTIONS]
  ```
 
-The test is composed by 5 raw images located in the *input/pict_images/* folder. By running the test, 
-you should visualize on the terminal all the *log* of the image processing and image analysis steps. You 
-can also track it on the *log.txt* file.
+The `example` is composed by 21 raw images located in the *input/pict_images/* folder. 
 
 The results are generated and saved in the *output/* folder with different sub-folders:
 <ul>
@@ -165,32 +205,44 @@ The results are generated and saved in the *output/* folder with different sub-f
     the final distance distribution and params estimates (mu and sigma) </li>
 </ul>
 
-2) Create a directory with the name of your system and the same structure as the *test/*: add to it the containing-beads
-   directory (*beads/*) and the containing-PICT-images directory (*pict_images/*).
+2) Create a directory with the name of your system and the same structure as the *example/*: add to it the beads
+   images to create the registration map (*reg/*) and another beads set to test the registration error (*reg/*).
+   Put your images in the directory called *pict_images/*.
 
 ```bash
   $ mkdir my_dir_name
   $ cd my_dir_name
-  # Create beads/ and pict_images/ if not there
-  $ mkdir beads/
+  # Create reg/ and pict_images/ if not there
+  $ mkdir reg/
+  $ mkdir test/
   $ mkdir pict_images/
   # Move the beads W1.tif and W2.tif to beads/ and your PICT images to pict_images/
-  $ mv path/to/beads/*.tif path/to/my_dir_name/beads/
+  $ mv path/to/beads-set-1/*.tif path/to/my_dir_name/reg/
+  $ mv path/to/beads-set-2/*.tif path/to/my_dir_name/test/
   $ mv path/to/pict-images/*.tif path/to/my_dir_name/pict_images/
  ```
 
-Run the software with your data:
+Run the software with your data using the bash script `run_pyf2f.sh `:
 
 ```bash
-  $ python3 measure_pict_distances.py -d my_dir 
+  $ bash run_pyf2f.sh my_dir 
  ```
+** Check carefully to the parameters in the bash script before running it.
 
 You may grab a coffee while waiting for the results :)
 
-Notebooks
+Notebooks and Colab
 --------
 
-Working on it.
+In the `notebooks` directory you will the jupyter-notebooks to run the tutorias for:
+
+- Image Registration: PyF2F_image_registration.ipynb
+
+* A full explanation of the workflow can be found in the notebook *Registration_tutorial_with_test.ipynb*
+
+- Distance Estimation: PyF2F_Estimate_Distances_Walkthrough.ipynb 
+
+You can also run the whole workflow using the Colab notebook called *PyF2F_Ruler_Colab.ipynb*
 
 Notes
 --------
@@ -204,10 +256,9 @@ This program needs an input of bright-field TIFF images (central quadrant, 16-bi
 
 **Beads**: To calibrate this protocol, the imaging of [TetraSpeck](https://www.thermofisher.com/order/catalog/product/T7279) 
 in both the red and green channel is required. For each channel, the user should acquire images from  
-4 fields of view (FOV) with isolated beads (avoiding clusters) and minimizing void areas (each FOV should have 
-a homogeneity distribution of beads to cover all the possible coordinates. Finally, the 4 FOV for each channel 
-should be stacked (e.g, stack-1 contains frame_FOV_0, frame_FOV_1, frame_FOV_2, frame_FOV_3) and named as **W1** for the
-red channel, and **W2** for the green channel.
+*n* different fields of view (FOV) with isolated beads (avoiding clusters) and minimizing void areas (each FOV should have 
+a homogeneity distribution of beads to cover all the possible coordinates. Finally, the FOV for each channel 
+should be stacked (e.g, stack-1 contains frame_FOV_0, frame_FOV_1, frame_FOV_2, frame_FOV_3).
 
 **PICT images**: *PICT images* is the name used to reference the images gathered from the 
 [PICT experiment]((https://www.sciencedirect.com/science/article/pii/S0092867417300521)). Each *pict_image.tif* is a 
@@ -236,15 +287,15 @@ From the input images, the program runs through different steps:
 #### 2) **Image pre-procesing**:
 
 - *Background subtraction*: Raw PICT images are corrected for the extracellular noise using the Rolling-Ball 
-   algorithm. The size for estimating the rolling ball kernel is based on the maximum separation between two yeast 
-   cells (a radius around 70 px.)
+   algorithm.
 
-- *Median filter*: correction for the intracellular noise is also applied with a median filter of 10 px.
+- *Median filter*: correction for the uneven illumination comming from the intracellular noise is also applied by 
+   subtracting the median-filtered image to the background-subtracted image. 
    
 #### 3) **Spot Detection**:
 
 Diffraction limited spots are detected using [Trackpy](http://soft-matter.github.io/trackpy/). After detection, the spots 
-from W1 and W2 channels falling in a maximum range of 1 px are linked (paired). From this step on, each pair will be 
+from W1 and W2 channels falling in a maximum range of *x* px are linked (paired). From this step on, each pair will be 
 analysed as a couple of red-green spots on the spot selection step.
 
 #### 4) **Spot selection**:
@@ -305,7 +356,4 @@ $$
 
 where <i>S(p<sub>δµ</sub>)</i>, <i>S(p<sub>δσ</sub>)</i> will be maimal when both scores <i>p<sub>δµ</sub></i> and 
 <i>p<sub>δσ</sub></i> will be similarly maximized.
-
-Acknowledgements
-----------
 
