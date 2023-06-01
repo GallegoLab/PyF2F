@@ -182,7 +182,7 @@ optional arguments:
                         'segment' (yeast segmentation), 'kde' (2D Kernel
                         Density Estimate), 'gaussian' (gaussian fitting), 'mle
                         (outlier rejection using the MLE)'. Default: 'all'
-
+```
 
 
 1) Run PyF2F-Ruler with the `example` dataset:
