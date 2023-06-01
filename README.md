@@ -231,7 +231,7 @@ Run the software with your data using the bash script `run_pyf2f.sh `:
 
 You may grab a coffee while waiting for the results :)
 
-Notebooks and Colab
+Tutorials
 --------
 
 In the `notebooks` directory you will the jupyter-notebooks to run the tutorias for:
