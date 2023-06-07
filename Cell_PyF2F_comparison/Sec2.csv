@@ -1,0 +1,7 @@
+Bait,Prey,mu_cell,serr_mu_cell,mu_py,serr_mu_py,selected
+Sec3-FRB,Sec2_GFP_C,65.22,5.13,78.73,5.65,non-sel
+Sec6-FRB,Sec2_GFP_C,68.31,9.69,68,5.1,sel
+Sec10-FRB,Sec2_GFP_C,66.69,6.51,68.96,7.05,sel
+Sec15-FRB,Sec2_GFP_C,69.06,15.41,59.76,5.33,sel
+Exo70-FRB,Sec2_GFP_C,78.8,5.18,81.57,5.03,sel
+Exo84-FRB,Sec2_GFP_C,64.87,10.03,55,13.07,sel
