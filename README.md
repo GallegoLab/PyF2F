@@ -24,17 +24,17 @@ What is it?
 -----------
 
 **PyF2F** is a Python-based software that provides the tools to estimate the distance between two fluorescent markers 
-that are labeling the termini of a protein molecules and a static anchoring platform in the cell. This software is the 
+that are labelling the termini of a protein molecule and a static anchoring platform in the cell. This software is the 
 Python implementation of our previous work [Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521) 
 where we combined [PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
-and integrative modeling to reconstruct the molecular architecture of the exocyst complex in its cellular environment.
+and integrative modelling to reconstruct the molecular architecture of the exocyst complex in its cellular environment.
 
 How does it work?
 -----------
 
-PyF2F utilizes bioimage analysis tools that allows for the **pre-processing** (*Background subtraction*, *chromatic
+PyF2F utilises bioimage analysis tools that allows for the **pre-processing** (*Background subtraction*, *chromatic
 aberration correction*, and *spot detection*) and **analysis** of live-cell imaging (fluorescence microscopy) data. The 
-set of image analysis functions can be used to estimate the pair-wise distance between a fluorophores flagging the terminus
+set of image analysis functions can be used to estimate the pairwise distance between a fluorophores flagging the terminus
 of a protein complex (prey-GFP) and a static intracellular anchor site (anchor-RFP). From a dataset of 20 - 30 images, 
 PyF2F estimates the μ and σ values of the final distance distribution with a precision below 5 nm.
 
@@ -55,7 +55,7 @@ to run the image analysis workflow without the need of installation.
   $ https://github.com/GallegoLab/PyF2F.git
   $ cd PyF2F
  ```
-2) Download the CNN weights: PyF2F utilizes the pre-trained weights for the neural network that is used for 
+2) Download the CNN weights: PyF2F utilises the pre-trained weights for the neural network that is used for 
    yeast cell segmentation in [Yeast Spotter](http://yeastspotter.csb.utoronto.ca/). The weights are necessary to run 
    the software, but are too large to share on GitHub. You can download the zip file from this 
    [Zenodo](https://zenodo.org/record/3598690) repository. 
@@ -80,11 +80,11 @@ Once downloaded, simply unzip it and move it to the *scripts/* directory. You ca
   $ pip install -r requirements.txt
  ```
 
-At this pont, the directory *PyF2F* should contain the files and directories described bellow:
+At this point, the directory *PyF2F* should contain the files and directories described below:
 
-#### Package tree
+#### PyF2F tree
 
-The package has the following structure:
+PyF2F has the following structure:
 
     PyF2F/
       README.md
@@ -115,7 +115,7 @@ Image Analysis Tutorial
 -----------------------
 
 The image analysis can be divided into two steps. First, we processed images to measure the centroid positions of the 
-GFP and RFP tags. Then, we analyzed the distribution of these centroid positions to estimate the true separation between
+GFP and RFP tags. Then, we analysed the distribution of these centroid positions to estimate the true separation between
 the GFP and RFP fluorophores using Single-molecule High-REsolution Colocalization (SHREC)
 ([Churchman et al. 2005](https://www.pnas.org/doi/abs/10.1073/pnas.0409487102), 
 [Churchman et al. 2006](https://www.sciencedirect.com/science/article/pii/S0006349506722457)).
@@ -160,7 +160,7 @@ optional arguments:
                         Spots with this probability to be found in the
                         population
   --mle_cutoff MLE_CUTOFF
-                        In the MLE, tant per cent of the distribution assumed
+                        In the MLE, percentage of the distribution assumed
                         to be ok. Outlier search in the right '1 - value' area
                         of the distance distribution
   --reject_lower REJECT_LOWER
@@ -227,7 +227,7 @@ Run the software with your data using the bash script `run_pyf2f.sh `:
 ```bash
   $ bash run_pyf2f.sh my_dir 
  ```
-** Check carefully to the parameters in the bash script before running it.
+** Check carefully the parameters in the bash script before running it.
 
 You may grab a coffee while waiting for the results :)
 
@@ -256,13 +256,13 @@ This program needs an input of bright-field TIFF images (central quadrant, 16-bi
 
 **Beads**: To calibrate this protocol, the imaging of [TetraSpeck](https://www.thermofisher.com/order/catalog/product/T7279) 
 in both the red and green channel is required. For each channel, the user should acquire images from  
-*n* different fields of view (FOV) with isolated beads (avoiding clusters) and minimizing void areas (each FOV should have 
+*n* different fields of view (FOV) with isolated beads (avoiding clusters) and minimising void areas (each FOV should have 
 a homogeneity distribution of beads to cover all the possible coordinates. Finally, the FOV for each channel 
 should be stacked (e.g, stack-1 contains frame_FOV_0, frame_FOV_1, frame_FOV_2, frame_FOV_3).
 
 **PICT images**: *PICT images* is the name used to reference the images gathered from the 
 [PICT experiment]((https://www.sciencedirect.com/science/article/pii/S0092867417300521)). Each *pict_image.tif* is a 
-stack of red/green channels. Diffraction-limited spots should be visualized when opening the image with ImageJ or any 
+stack of red/green channels. Diffraction-limited spots should be visualised when opening the image with ImageJ or any 
 other image processing software. 
 
 ### Note 2: Running the software
@@ -271,7 +271,7 @@ From the input images, the program runs through different steps:
 
 #### 1) **Bead Registration**:
 
-- *Bead registration*: isolated beads are detected for each channel. Agglomerations of beads, or beads shinning with
+- *Bead registration*: isolated beads are detected for each channel. Agglomerations of beads, or beads shining with
    low intensity are excluded based on the 0-th moment <i>M<sub>00</sub></i> of brightness (mass) (excluding the beads 
    with a <i>M<sub>00</sub></i> falling on the *1st* and *95th* percentile).
 
@@ -282,14 +282,14 @@ From the input images, the program runs through different steps:
         change. However, because we are imaging at different wavelengths, each channel will refract the light differently
       (the refractive index of the lens varies with wavelength). The inability of the lens to bring the green and red 
        spots into a common focus results in a slightly different image size and focal point for each wavelength. This 
-       artifact is commonly known as chromatic aberration, and must be corrected.
+       the artifact is commonly known as chromatic aberration, and must be corrected.
 
 #### 2) **Image pre-procesing**:
 
 - *Background subtraction*: Raw PICT images are corrected for the extracellular noise using the Rolling-Ball 
    algorithm.
 
-- *Median filter*: correction for the uneven illumination comming from the intracellular noise is also applied by 
+- *Median filter*: correction for the uneven illumination coming from the intracellular noise is also applied by 
    subtracting the median-filtered image to the background-subtracted image. 
    
 #### 3) **Spot Detection**:
@@ -303,7 +303,7 @@ analysed as a couple of red-green spots on the spot selection step.
 The following steps are meant to refine the dataset and reject as many noisy centroid positions as possible. 
 
 - *Selection of isolated spots close to the cell perimeter*: only isolated pairs close to the anchor sites (located in the 
-plasma membrane) are select. Here, yeast cell segmentation is applied to sort spots falling to far from the plasma 
+plasma membrane) are selected. Here, yeast cell segmentation is applied to sort spots falling to far from the plasma 
 membrane, close to the neck of yeast cells, or too close to its closest neighbour.
 
 - *Selection of the spots in focus*: detected pairs (couples) of spots are analysed according to the second moment <i>m<sub>2</sub></i> of 
@@ -347,13 +347,13 @@ $$
 
 will thus be maximal.
 
-The µ, σ and the ensemble of data points that are retained after all these iterations are those that maximize a scoring 
+The µ, σ and the ensemble of data points that are retained after all these iterations are those that maximise a scoring 
 function defined as 
 
 $$
     S (p_{\delta \mu}, p_{\delta \sigma}) = - p_{\mu} \cdot p_{\delta \mu} -  p_{\sigma} \cdot p_{\delta \sigma}
 $$
 
-where <i>S(p<sub>δµ</sub>)</i>, <i>S(p<sub>δσ</sub>)</i> will be maimal when both scores <i>p<sub>δµ</sub></i> and 
-<i>p<sub>δσ</sub></i> will be similarly maximized.
+where <i>S(p<sub>δµ</sub>)</i>, <i>S(p<sub>δσ</sub>)</i> will be maximal when both scores <i>p<sub>δµ</sub></i> and 
+<i>p<sub>δσ</sub></i> will be similarly maximised.
 
