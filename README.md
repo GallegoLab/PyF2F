@@ -24,9 +24,9 @@ What is it?
 -----------
 
 **PyF2F** is a Python-based software that provides the tools to estimate the distance between two fluorescent markers 
-that are labeling one or two protein molecules. This software is the Python implementation of our previous work 
-[Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521) where we combined 
-[PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
+that are labeling the termini of a protein molecules and a static anchoring platform in the cell. This software is the 
+Python implementation of our previous work [Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521) 
+where we combined [PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
 and integrative modeling to reconstruct the molecular architecture of the exocyst complex in its cellular environment.
 
 How does it work?
