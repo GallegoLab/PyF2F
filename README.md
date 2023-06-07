@@ -1,4 +1,4 @@
-# PyF2F-Ruler
+# PyF2F
 
 Contents
 -----------
@@ -23,7 +23,7 @@ Contents
 What is it?
 -----------
 
-**PyF2F-Ruler** is a Python-based software that provides the tools to estimate the distance between two fluorescent markers 
+**PyF2F** is a Python-based software that provides the tools to estimate the distance between two fluorescent markers 
 that are labeling one or two protein molecules. This software is the Python implementation of our previous work 
 [Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521) where we combined 
 [PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
@@ -32,11 +32,11 @@ and integrative modeling to reconstruct the molecular architecture of the exocys
 How does it work?
 -----------
 
-PyF2F-Ruler utilizes bioimage analysis tools that allows for the **pre-processing** (*Background subtraction*, *chromatic
+PyF2F utilizes bioimage analysis tools that allows for the **pre-processing** (*Background subtraction*, *chromatic
 aberration correction*, and *spot detection*) and **analysis** of live-cell imaging (fluorescence microscopy) data. The 
 set of image analysis functions can be used to estimate the pair-wise distance between a fluorophores flagging the terminus
 of a protein complex (prey-GFP) and a static intracellular anchor site (anchor-RFP). From a dataset of 20 - 30 images, 
-PyF2F-Ruler estimates the μ and σ values of the final distance distribution with a precision below 5 nm.
+PyF2F estimates the μ and σ values of the final distance distribution with a precision below 5 nm.
 
 
 Instructions
@@ -52,10 +52,10 @@ to run the image analysis workflow without the need of installation.
    run the following command:
 
 ```bash
-  $ https://github.com/GallegoLab/PyF2F-Ruler.git
-  $ cd PyF2F-Ruler
+  $ https://github.com/GallegoLab/PyF2F.git
+  $ cd PyF2F
  ```
-2) Download the CNN weights: PyF2F-Ruler utilizes the pre-trained weights for the neural network that is used for 
+2) Download the CNN weights: PyF2F utilizes the pre-trained weights for the neural network that is used for 
    yeast cell segmentation in [Yeast Spotter](http://yeastspotter.csb.utoronto.ca/). The weights are necessary to run 
    the software, but are too large to share on GitHub. You can download the zip file from this 
    [Zenodo](https://zenodo.org/record/3598690) repository. 
@@ -64,7 +64,7 @@ Once downloaded, simply unzip it and move it to the *scripts/* directory. You ca
 
 ```bash
   $ unzip weights.zip
-  $ mv weights/ PyF2F-Ruler/scripts/
+  $ mv weights/ PyF2F/scripts/
  ```
 
 3) Create a conda environment:
@@ -80,16 +80,16 @@ Once downloaded, simply unzip it and move it to the *scripts/* directory. You ca
   $ pip install -r requirements.txt
  ```
 
-At this pont, the directory *PyF2F-Ruler* should contain the files and directories described bellow:
+At this pont, the directory *PyF2F* should contain the files and directories described bellow:
 
 #### Package tree
 
 The package has the following structure:
 
-    PyF2F-Ruler/
+    PyF2F/
       README.md
       scripts/
-          run_pyf2f.sh               (running PyF2F-Ruler using a bash script)
+          run_pyf2f.sh               (running PyF2F using a bash script)
           functions.py               
           custom.py
           gaussian_fit.py
