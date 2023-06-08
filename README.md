@@ -49,9 +49,9 @@ PyF2F estimates the μ and σ values of the final distance distribution with a p
 
 Instructions
 -----------
-### Use Colab
+### Use <a href="https://colab.research.google.com/drive/1kSOnZdwRb4xuznyQIpRNWUBBFKms91M8?usp=sharing"> <img src="https://colab.research.google.com/assets/colab-badge.svg"> PyF2F Colab </a>
 
-You can use <a href="https://colab.research.google.com/drive/1kSOnZdwRb4xuznyQIpRNWUBBFKms91M8?usp=sharing"> <img src="https://colab.research.google.com/assets/colab-badge.svg"> PyF2F Colab </a> to run the image analysis workflow without the need of installation. 
+You can use the Colab to run the image analysis workflow online. 
 
 ### Run it locally
 
