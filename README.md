@@ -51,8 +51,7 @@ Instructions
 -----------
 ### Use Colab
 
-You can use [PyF2F Colab](https://colab.research.google.com/drive/1kSOnZdwRb4xuznyQIpRNWUBBFKms91M8?usp=sharing)
-to run the image analysis workflow without the need of installation. 
+You can use <a href="https://colab.research.google.com/drive/1kSOnZdwRb4xuznyQIpRNWUBBFKms91M8?usp=sharing"> <img src="https://colab.research.google.com/assets/colab-badge.svg"> PyF2F Colab </a> to run the image analysis workflow without the need of installation. 
 
 ### Run it locally
 
