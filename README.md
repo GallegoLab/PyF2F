@@ -1,5 +1,5 @@
 <h1 align="center">PyF2F</h1>
-<h3 align="center">Robust and simplified fluorophore-to-fluorophore distance measurements in Python</h3>
+<h3 align="center">Robust and simplified fluorophore-to-fluorophore distance measurements</h3>
 <p align="center">
   <a href="/LICENSE" alt="licence"><img src="https://img.shields.io/github/license/GallegoLab/PyF2F"></a>
   <a href="https://zenodo.org/badge/latestdoi/638469280" alt="DOI"><img src="https://zenodo.org/badge/638469280.svg"></a>
