@@ -1,9 +1,8 @@
-<h3 align="center">PyF2F</h3>
+<h1 align="center">PyF2F</h1>
 <h3 align="center">Robust and simplified fluorophore-to-fluorophore distance measurements in Python</h3>
 <p align="center">
   <a href="/LICENSE" alt="licence"><img src="https://img.shields.io/github/license/GallegoLab/PyF2F"></a>
   <a href="https://zenodo.org/badge/latestdoi/638469280" alt="DOI"><img src="https://zenodo.org/badge/638469280.svg"></a>
-  <a href="https://softmatterlab.github.io/DeepTrack2/deeptrack.html"><img src="https://img.shields.io/badge/docs-passing-green" alt="PyPI version"></a>
   <a href="" <img src="https://img.shields.io/badge/python-3.7-blue" alt="Python version"></a>
 </p>
 
@@ -11,7 +10,6 @@
 
 Contents
 -----------
-[![DOI](https://zenodo.org/badge/638469280.svg)](https://zenodo.org/badge/latestdoi/638469280)
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 - [What is it?](#what-is-it)
