@@ -3,7 +3,7 @@
 <p align="center">
   <a href="/LICENSE" alt="licence"><img src="https://img.shields.io/github/license/GallegoLab/PyF2F"></a>
   <a href="https://zenodo.org/badge/latestdoi/638469280" alt="DOI"><img src="https://zenodo.org/badge/638469280.svg"></a>
-  <a href="" <img src="https://img.shields.io/badge/python-3.7-blue" alt="Python version"></a>
+  <a href="https://badge.fury.io/py/deeptrack"><img src="https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue" alt="Python version"></a>
 </p>
 
 
