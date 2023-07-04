@@ -59,7 +59,7 @@ You can use the Colab to run the image analysis workflow online.
    run the following command:
 
 ```bash
-  $ https://github.com/GallegoLab/PyF2F.git
+  $ git clone https://github.com/GallegoLab/PyF2F.git
   $ cd PyF2F
  ```
 2) Download the CNN weights: PyF2F utilises the pre-trained weights for the neural network that is used for 
