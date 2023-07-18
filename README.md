@@ -65,7 +65,14 @@ You can use the Colab to run the image analysis workflow online.
 2) Download the CNN weights: PyF2F utilises the pre-trained weights for the neural network that is used for 
    yeast cell segmentation in [Yeast Spotter](http://yeastspotter.csb.utoronto.ca/). The weights are necessary to run 
    the software, but are too large to share on GitHub. You can download the zip file from this 
-   [Zenodo](https://zenodo.org/record/3598690) repository. 
+   [Zenodo](https://zenodo.org/record/3598690) repository.
+
+   You can also download the CNN weights for the yeast cell segmentation with the `zenodo-get` command:
+
+```bash
+  $ pip install zenodo-get
+  $ zenodo_get -r 3598690
+ ```
 
 Once downloaded, simply unzip it and move it to the *scripts/* directory. You can also run the following command:
 
