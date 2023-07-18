@@ -78,7 +78,8 @@ You can use the Colab to run the image analysis workflow online.
 
 ```bash
   $ unzip weights.zip
-  $ mv weights/ PyF2F/scripts/
+  $ rm weights.zip
+  $ mv weights/ scripts/
  ```
 
 3) Create a conda environment:
