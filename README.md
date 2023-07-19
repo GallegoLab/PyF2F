@@ -74,7 +74,7 @@ You can use the Colab to run the image analysis workflow online.
   $ zenodo_get -r 3598690
  ```
 
-    Once downloaded, simply unzip it and move it to the *scripts/* directory. You can also run the following command:
+  Once downloaded, simply unzip it and move it to the *scripts/* directory. You can also run the following command:
 
 ```bash
   $ unzip weights.zip
