@@ -18,13 +18,6 @@ Contents
   - [Use Colab](#use-colab)
   - [Run it locally](#run-it-locally)
 - [Notebooks](#notebooks)
-- [Notes](#notes)
-  - [Note 1: Input files](#note-1-input-files-beads-and-pict-images)
-  - [Note 2: Running the Software](#note-2-running-the-software)
-    - [Bead registration](#1-bead-registration)
-    - [Pre-Processing](#2-image-pre-procesing)
-    - [Spot Detection](#3-spot-detection)
-    - [Spot Selection](#4-spot-selection)
 
 <!-- /TOC -->
 
