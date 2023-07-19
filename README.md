@@ -55,6 +55,11 @@ You can use the Colab to run the image analysis workflow online.
 
 ### Run it locally
 
+#### Requirements
+  * Python version 3.7
+  * All requirements list in `requirements.txt`
+
+
 1) Download the git repo in your local computer and get into the folder, or open  terminal and 
    run the following command:
 
@@ -82,7 +87,7 @@ You can use the Colab to run the image analysis workflow online.
   $ mv weights/ scripts/
  ```
 
-3) Create a conda environment:
+3) Create a conda environment with Python3.7:
 
 ```bash
   $ conda create -n {ENV_NAME} python=3.7 anaconda
@@ -118,10 +123,18 @@ PyF2F has the following structure:
           spot_detection_functions.py
           mrcnn/                      (YeastSpotter)
           weights/                    (for mrcnn yeast segmentation)  
+
+      scripts_colab/                  (Scripts adapted to run in Colab)
               
-      example/
+      full_example/
           input/
               pict_images/            (21 images from Picco et al., 2017)
+              reg/                    (beads set to create the registration map)
+              test/                   (beads set to test the registration)
+
+      short_example/
+          input/
+              pict_images/            (4 images from the full_example dataset)
               reg/                    (beads set to create the registration map)
               test/                   (beads set to test the registration)
 
@@ -200,14 +213,27 @@ optional arguments:
 ```
 
 
-1) Run PyF2F-Ruler with the `example` dataset:
+1) Run PyF2F-Ruler with the `short_example` dataset to check that everything works properly:
+
+  a) Image Registration Workflow (creating the Registration map)
 
 ```bash
-  $ conda activate {ENV_NAME}  # Make sure to activate your conda environment
-  $ python3 Pyf2f_main.py [PARAMS][OPTIONS]
- ```
+  $ cd scripts                                                                         # make sure you are in scripts/ folder
+  $ conda activate {ENV_NAME}                                                          # make sure to activate your conda environment
+  $ bash run_image_registration.sh ../short_example/input/ reg out out_reg out_test    # create registration map
+```
+  The resulting transformation matrix and registration map will be saved in 
+  the `out_reg` and `out_test` folders, respectively.
 
-The `example` is composed by 21 raw images located in the *input/pict_images/* folder. 
+  b) Distance Estimation Workflow
+
+```bash
+  $ bash run_pyf2f.sh ../short_example/ all                                             # Run all the workflow steps to estimate the distance
+                                                                                        # between fluorophores.  
+```
+
+* The `short_example` is composed by 4 PICT images located in the *short_example/input/pict_images/* folder.
+* The `full_example` is composed by 21 PICT images located in the *full_example/input/pict_images/* folder. 
 
 The results are generated and saved in the *output/* folder with different sub-folders:
 <ul>
@@ -249,6 +275,9 @@ You may grab a coffee while waiting for the results :)
 Tutorials
 --------
 
+You may be interested in running the PyF2F workflow directly in Colab. By default, Colab 
+runs through the `small_dataset`
+
 In the `notebooks` directory you will the jupyter-notebooks to run the tutorias for:
 
 - Image Registration: PyF2F_image_registration.ipynb
@@ -272,8 +301,8 @@ This program needs an input of bright-field TIFF images (central quadrant, 16-bi
 **Beads**: To calibrate this protocol, the imaging of [TetraSpeck](https://www.thermofisher.com/order/catalog/product/T7279) 
 in both the red and green channel is required. For each channel, the user should acquire images from  
 *n* different fields of view (FOV) with isolated beads (avoiding clusters) and minimising void areas (each FOV should have 
-a homogeneity distribution of beads to cover all the possible coordinates. Finally, the FOV for each channel 
-should be stacked (e.g, stack-1 contains frame_FOV_0, frame_FOV_1, frame_FOV_2, frame_FOV_3).
+a homogeneity distribution of beads to cover all the possible coordinates). For the bead image adquisition, we recommend 
+to follow the protocol described in [Niekamp S. et al., 2019](https://www.pnas.org/doi/abs/10.1073/pnas.1815826116) 
 
 **PICT images**: *PICT images* is the name used to reference the images gathered from the 
 [PICT experiment]((https://www.sciencedirect.com/science/article/pii/S0092867417300521)). Each *pict_image.tif* is a 
@@ -371,6 +400,10 @@ $$
 
 where <i>S(p<sub>δµ</sub>)</i>, <i>S(p<sub>δσ</sub>)</i> will be maximal when both scores <i>p<sub>δµ</sub></i> and 
 <i>p<sub>δσ</sub></i> will be similarly maximised.
+
+Reporting Bugs 
+---------------
+Any bug or error that may appear while running PyF2F, please contact altair.chinchilla@upf.edu
 
 Copyright
 -----------
