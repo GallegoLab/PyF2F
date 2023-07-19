@@ -213,7 +213,7 @@ optional arguments:
 ```
 
 
-1) Run PyF2F-Ruler with the `short_example` dataset to check that everything works properly:
+Run PyF2F-Ruler with the `short_example` dataset to check that everything works properly:
 
   a) Image Registration Workflow (creating the Registration map)
 
@@ -245,30 +245,6 @@ The results are generated and saved in the *output/* folder with different sub-f
     image, on each step, as well as the distance distribution for each step. It also contains PDF file with
     the final distance distribution and params estimates (mu and sigma) </li>
 </ul>
-
-2) Create a directory with the name of your system and the same structure as the *example/*: add to it the beads
-   images to create the registration map (*reg/*) and another beads set to test the registration error (*reg/*).
-   Put your images in the directory called *pict_images/*.
-
-```bash
-  $ mkdir my_dir_name
-  $ cd my_dir_name
-  # Create reg/ and pict_images/ if not there
-  $ mkdir reg/
-  $ mkdir test/
-  $ mkdir pict_images/
-  # Move the beads W1.tif and W2.tif to beads/ and your PICT images to pict_images/
-  $ mv path/to/beads-set-1/*.tif path/to/my_dir_name/reg/
-  $ mv path/to/beads-set-2/*.tif path/to/my_dir_name/test/
-  $ mv path/to/pict-images/*.tif path/to/my_dir_name/pict_images/
- ```
-
-Run the software with your data using the bash script `run_pyf2f.sh `:
-
-```bash
-  $ bash run_pyf2f.sh my_dir 
- ```
-** Check carefully the parameters in the bash script before running it.
 
 You may grab a coffee while waiting for the results :)
 
@@ -330,16 +306,16 @@ From the input images, the program runs through different steps:
 
 #### 2) **Image pre-procesing**:
 
-- *Background subtraction*: Raw PICT images are corrected for the extracellular noise using the Rolling-Ball 
+- *Background subtraction*: PICT images are corrected for the extracellular noise using the Rolling-Ball 
    algorithm.
 
-- *Median filter*: correction for the uneven illumination coming from the intracellular noise is also applied by 
+- *Median filter*: correction for the uneven illumination coming from the intracellular media is also applied by 
    subtracting the median-filtered image to the background-subtracted image. 
    
 #### 3) **Spot Detection**:
 
 Diffraction limited spots are detected using [Trackpy](http://soft-matter.github.io/trackpy/). After detection, the spots 
-from W1 and W2 channels falling in a maximum range of *x* px are linked (paired). From this step on, each pair will be 
+from channel 1 and channel 2 falling in a maximum separation of *2* or *3* pixels are linked (paired). From this step on, each pair will be 
 analysed as a couple of red-green spots on the spot selection step.
 
 #### 4) **Spot selection**:
