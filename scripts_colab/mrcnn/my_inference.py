@@ -12,8 +12,8 @@ import numpy as np
 np.random.seed(seed)
 import tensorflow as tf
 
-# tf.set_random_seed(seed)
-tf.random.set_seed(seed)
+tf.set_random_seed(seed)
+# tf.random.set_seed(seed)
 
 import random
 
@@ -127,7 +127,8 @@ def predict_images(test_path, sample_submission, outputfilename, rescale=False, 
         ##Set seeds for each image, just in case..
         random.seed(seed)
         np.random.seed(seed)
-        tf.random.set_seed(seed)
+        tf.set_random_seed(seed)
+        # tf.random.set_seed(seed)
 
         ## Load the image
         image_path = os.path.join(test_path, image_id, 'images', image_id + '.png')
