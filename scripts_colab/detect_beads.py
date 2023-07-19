@@ -183,7 +183,7 @@ def plot_mass(path_to_save, df, image_name):
     if not os.path.exists(path_to_save):
         os.mkdir(path_to_save)
     plt.savefig(path_to_save + "mass_selection_{}.png".format(image_name))
-    plt.show()
+    # plt.show()
     plt.clf()
 
 
@@ -237,7 +237,7 @@ def plot_distance_distribution(path_to_save, c2_test, c1_test, c1_test_new, px_s
     ax3.legend()
     plt.tight_layout()
     plt.savefig(path_to_save + "/distance_distribution_final.png")
-    plt.show()
+    # plt.show()
     plt.clf()
 
 
@@ -271,7 +271,7 @@ def calculate_tre(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
     ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
     plt.tight_layout()
     plt.savefig(path_to_save + "/distance_x_offset.png")
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # y offset
@@ -284,7 +284,7 @@ def calculate_tre(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
     ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
     plt.tight_layout()
     plt.savefig(path_to_save + "/distance_y_offset.png")
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # ---------#
@@ -303,7 +303,7 @@ def calculate_tre(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
     ax1.invert_yaxis()
     plt.tight_layout()
     plt.savefig(path_to_save + "/x_shift.png")
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # Y shift
@@ -318,7 +318,7 @@ def calculate_tre(path_to_save, c2_test, c1_test, c1_test_new, px_size=110):
     ax2.invert_yaxis()
     plt.tight_layout()
     plt.savefig(path_to_save + "/y_shift.png")
-    plt.show()
+    # plt.show()
     plt.clf()
 
     print(f"Mean shift in X axis =  {np.round(mean_x, 3)} nm \n")
@@ -505,7 +505,7 @@ def plotly_coords(c1_coords, c2_coords, path=None, c1_corrected=None, title=""):
     if path is not None:
         fig.write_html(path + "/beads_{}.html".format(title))
         fig.data = list()
-        fig.show()
+        # fig.show()
     else:
         fig.show()
 
