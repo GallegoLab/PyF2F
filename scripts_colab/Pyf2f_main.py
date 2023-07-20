@@ -131,14 +131,14 @@ parser.add_argument('--mu_ini',
                     dest='mu_ini',
                     action="store",
                     type=int,
-                    default=None,
+                    default="auto",
                     help="Initial guess for mu search in the MLE")
 
 parser.add_argument('--sigma_ini',
                     dest='sigma_ini',
                     action="store",
                     type=int,
-                    default=None,
+                    default="auto",
                     help="Initial guess for sigma search in the MLE")
 
 parser.add_argument('--bin_size',
