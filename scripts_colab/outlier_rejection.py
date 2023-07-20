@@ -189,7 +189,7 @@ def plot_outlier_rejection(sel_distribution, c, mu, sigma, i_max, n, sh_scores, 
 
 
 def run_outlier_rejection(data, distances_list, dataset_name, results_dir, figures_dir, images_dir,
-                          reject_lower, cutoff, bin_size, mu_ini="auto", sigma_ini="auto", dirty=False):
+                          reject_lower, cutoff, bin_size, mu_ini=None, sigma_ini=None, dirty=False):
     """
     Main function to run outlier rejection
     Parameters
@@ -214,11 +214,11 @@ def run_outlier_rejection(data, distances_list, dataset_name, results_dir, figur
     # By default, mu_ini and sigma_ini are "auto". The software starts with the initial guess of
     # mu0 = median of the distribution ; sigma0: standard deviation of the distribution. If you want to choose
     # your initial guess, change it in the options.py file
-    if mu_ini is not "auto":
+    if mu_ini is not None:
         mu0 = mu_ini
     else:
         mu0 = np.median(distances_list)  # initial guess for mu opt parameter
-    if sigma_ini is not "auto":
+    if sigma_ini is not None:
         sigma0 = sigma_ini
     else:
         sigma0 = np.std(distances_list)  # initial guess for sigma opt parameter
