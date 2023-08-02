@@ -7,11 +7,6 @@
   <a href="https://www.python.org/downloads/release/python-370/"><img src="https://img.shields.io/badge/python-3.7-blue" alt="Python version"></a>
 </p>
 
-
-
-Contents
------------
-
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 - [What is it?](#what-is-it)
 - [How does it work?](#how-does-it-work)
