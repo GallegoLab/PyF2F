@@ -91,8 +91,8 @@ def load_data_for_kde(results_dir, figures_dir, px_size):
     # =====================
     # Load data ensuring that W1 & W2 are paired
     if not os.path.exists(results_dir + 'segmentation/') or len(os.listdir(results_dir + 'segmentation/')) == 0:
-        sys.stderr.write('\nPICT-MODELLER-ERROR: Once upon a time, a brilliant human trying to hack PICT-MODELLER...'
-                         '!!\n Come on! Did you segmented your cells (option - segment)? No padre. \n'
+        sys.stderr.write('\nPyF2F-ERROR: Once upon a time, a brilliant human trying to hack PyF2F...'
+                         '\n Come on! Did you segmented your cells (option - segment)? No padre. \n'
                          'I cannot proceed if I do not have info about your segmented spots...\n '
                          'Please, run the segmentation first. \n'
                          'Thanks! ;)\n\n')
@@ -270,7 +270,7 @@ def plot_kde(df_W1, df_W2, df_data, figures_dir, results_dir):
     hue_order = ['sel', 'non-sel']
     sns.kdeplot(x=df_W1["m2"], y=df_W1["ecc"], fill=True, thresh=0.05, cbar=False, ax=ax1,
                 bw_method="silverman", color="grey")
-    sns.scatterplot(data=df_W1, x="m2", y="ecc", hue="selected", palette=["blue", "black"], alpha=0.8,
+    sns.scatterplot(data=df_W1, x="m2", y="ecc", hue="selected", palette=["mediumturquoise", "black"], alpha=0.8,
                     size="selected", sizes=(150, 50), ax=ax1, hue_order=hue_order)
     ax1.grid(False)
 
@@ -284,7 +284,7 @@ def plot_kde(df_W1, df_W2, df_data, figures_dir, results_dir):
 
     sns.kdeplot(x=df_W1["ecc"], y=df_W2["ecc"], fill=True, thresh=0.05, cbar=False, ax=ax2,
                 bw_method="silverman", color="grey")
-    sns.scatterplot(data=df_data, x="ecc_W1", y="ecc_W2", hue="selected", palette=["blue", "black"], alpha=0.8,
+    sns.scatterplot(data=df_data, x="ecc_W1", y="ecc_W2", hue="selected", palette=["mediumturquoise", "black"], alpha=0.8,
                     size="selected", sizes=(150, 50), ax=ax2, hue_order=hue_order)
 
     # ax3 - W2 (m2 vs ecc)
@@ -297,7 +297,7 @@ def plot_kde(df_W1, df_W2, df_data, figures_dir, results_dir):
 
     sns.kdeplot(x=df_W2["m2"], y=df_W2["ecc"], fill=True, thresh=0.05, cbar=False, ax=ax3,
                 bw_method="silverman", color="grey")
-    sns.scatterplot(data=df_W2, x="m2", y="ecc", hue="selected", palette=["blue", "black"], alpha=0.6,
+    sns.scatterplot(data=df_W2, x="m2", y="ecc", hue="selected", palette=["mediumturquoise", "black"], alpha=0.6,
                     size="selected", sizes=(150, 50), ax=ax3, hue_order=hue_order)
 
     # ax4 - W1 vs W2 (m2)
@@ -310,7 +310,7 @@ def plot_kde(df_W1, df_W2, df_data, figures_dir, results_dir):
 
     sns.kdeplot(x=df_W1["m2"], y=df_W2["m2"], fill=True, thresh=0.05, cbar=False, ax=ax4,
                 bw_method="silverman", color="grey")
-    sns.scatterplot(data=df_data, x="m2_W1", y="m2_W2", hue="selected", palette=["blue", "black"], alpha=0.6,
+    sns.scatterplot(data=df_data, x="m2_W1", y="m2_W2", hue="selected", palette=["mediumturquoise", "black"], alpha=0.6,
                     size="selected", sizes=(150, 50), ax=ax4, hue_order=hue_order)
 
     ax1.set_xlim([df_W1.m2.min(), df_W1.m2.max()])  # W1 (m2 vs ecc)

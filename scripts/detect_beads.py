@@ -227,7 +227,7 @@ def plot_distance_distribution(path_to_save, c2_test, c1_test, c1_test_new, px_s
     fig, ax3 = plt.subplots(figsize=(15, 15))
     sns.histplot(data=ddist(c2_test, c1_test, px_size=px_size), kde=True, color="tab:grey", ax=ax3, fill=True,  # sandybrown
                  stat="density", label="initial c1-c2 distances", cumulative=False)
-    sns.histplot(data=ddist(c2_test, c1_test_new, px_size=px_size), kde=True, color="blue", ax=ax3, fill=True,
+    sns.histplot(data=ddist(c2_test, c1_test_new, px_size=px_size), kde=True, color="mediumturquoise", ax=ax3, fill=True,
                  stat="density", label="transformed c1-c2 distances", cumulative=False)
     ax3.set_xlabel("$d \ (nm)$")  # fontsize=11, labelpad=30)
     ax3.set_ylabel("$Density$")   # fontsize=45, labelpad=30)

@@ -17,7 +17,7 @@ os.environ.pop("QT_QPA_PLATFORM_PLUGIN_PATH")  # avoid cv2 and pyqt5 to be incom
 logging.getLogger('matplotlib.font_manager').disabled = True
 
 __author__ = "Altair C. Hernandez"
-__copyright__ = 'Copyright 2023, PyF2F-Ruler'
+__copyright__ = 'Copyright 2023, PyF2F'
 __credits__ = ["J. Sebastian Ortiz", "Laura I. Betancur", "Radovan Dojcilovic", "Andrea Picco",
                "Marko Kaksonen", "Oriol Gallego"]
 __version__ = "1.0"
@@ -68,7 +68,7 @@ def pp(pict_images_dir, path_to_save_pp, rbr_radius, mf_radius, verbose=False):
     # Check if detected spots are present
     print(pict_images_dir)
     if not os.path.exists(pict_images_dir) or len(os.listdir(pict_images_dir)) == 0:
-        sys.stderr.write('\nPICT-MODELLER-ERROR: So fast!! You should drink a coffee first haha\n'
+        sys.stderr.write('\nPyF2F-ERROR: So fast!! You should drink a coffee first haha\n'
                          'Do you have PICT images? You sure? Go and check it!\n'
                          'Thanks! ;)\n\n')
         sys.exit(1)
@@ -311,7 +311,7 @@ def spot_detection(images_dir, spots_dir, results_dir, figures_dir,
         if not test and total_final <= 100:
             # WARNING: if number of paired spots < 100, poor dataset or poor quality images.
             # The following analysis could give misleading - biased - non reliable results!
-            sys.stderr.write('PICT-WARNING: Trackpy could pair less than 100 spots in your image dataset '
+            sys.stderr.write('PyF2F-WARNING: Trackpy could pair less than 100 spots in your image dataset '
                              f'{"/".join(images_dir.split("/")[:3])}. '
                              'Probably due to a short dataset '
                              'or poor quality images :(\n'

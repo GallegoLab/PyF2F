@@ -229,7 +229,7 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
 
     # Load data from Segmentation Filter
     if not os.path.exists(f"{results_dir}kde/"):
-        sys.stderr.write(f"PICT-MODELLER-ERROR: {results_dir}kde/ does not exists or is empty."
+        sys.stderr.write(f"PyF2F-ERROR: {results_dir}kde/ does not exists or is empty."
                          " Do you have spots detected after KDE? :/\n"
                          "Double check it and re-run!\n\n\tThanks and good luck! :)\n")
         sys.exit(1)
@@ -349,7 +349,7 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     # WARNING!
     if len(percent_sel_total_W1) == 0 or len(percent_sel_total_W1) == 0 or len(percent_sel_total_W1) == 0:
         # WARNING: if no spots selected, we cannot continue!
-        sys.stderr.write('PICT-MODELLER-ERROR: 0 spots found in datasets or very few :( '
+        sys.stderr.write('PyF2F-ERROR: 0 spots found in datasets or very few :( '
                          'Probably due to a short dataset or poor quality images. \n'
                          '\t\tWe recommend a minimum number of input images == 20.\n'
                          '\t\tPlease, review your input image dataset and quality and run it again.\n\n'
@@ -388,7 +388,7 @@ def main_gaussian(results_dir, images_dir, figures_dir, gaussian_cutoff, px_size
     sns.set_style("white")
     sns.despine()
     hue_order = ['sel', 'non-sel']
-    sns.scatterplot(data=df_data, x="r2_W1", y="r2_W2", hue="selected", palette=["blue", "black"], alpha=0.6,
+    sns.scatterplot(data=df_data, x="r2_W1", y="r2_W2", hue="selected", palette=["mediumturquoise", "black"], alpha=0.6,
                     s=50, zorder=10, ax=ax, hue_order=hue_order)
     # ax.set_title("Goodness of the Gaussian Fit", fontweight="bold", size=20)
     ax.set_ylabel("$R^{2} _{GFP}$", fontsize=20)

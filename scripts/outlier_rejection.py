@@ -119,7 +119,7 @@ def plot_outlier_rejection(sel_distribution, c, mu, sigma, i_max, n, sh_scores, 
                  fontweight="bold", size=25)
     sns.histplot(data=initial_distances, kde=False, color="tab:grey", binwidth=bin_size, ax=ax, fill=True,
                  stat="density")
-    sns.histplot(data=sel_distribution, kde=False, ax=ax, color="mediumblue", binwidth=bin_size, fill=True,
+    sns.histplot(data=sel_distribution, kde=False, ax=ax, color="mediumturquoise", binwidth=bin_size, fill=True,
                  stat="density")
     ax.set_xlabel("Distances (nm) ", fontsize=30, labelpad=30)
     ax.set_ylabel("Density ", fontsize=30, labelpad=30)
@@ -141,7 +141,7 @@ def plot_outlier_rejection(sel_distribution, c, mu, sigma, i_max, n, sh_scores, 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(40, 15))
     sns.set_style("whitegrid", {'axes.grid': False})
     sns.despine()
-    sns.histplot(x=sel_distribution, kde=False, ax=ax1, stat="density", legend=True, color='mediumblue',
+    sns.histplot(x=sel_distribution, kde=False, ax=ax1, stat="density", legend=True, color='mediumturquoise',
                  binwidth=bin_size, edgecolor='black')
     ax1.plot(c[0], pdf(c[0], mu[i_max][0], sigma[i_max][0]), color='black', linewidth=8,
              label=
@@ -294,7 +294,7 @@ def outlier_rejection(results_dir, figures_dir, images_dir, mu_ini, sigma_ini, r
     # Check if detected spots are present
     if not os.path.exists(results_dir + 'gaussian_fit/') or len(os.listdir(results_dir + 'gaussian_fit/')) == 0:
         sys.stderr.write(
-            '\nPICT-MODELLER-ERROR: Hey! Good morning! Are you trying to build the house from the roof?\n'
+            '\nPyF2F-ERROR: Hey! Good morning! Are you trying to build the house from the roof?\n'
             'You should follow all the pipeline (segment, gaussian, kde) before entering here.\n'
             'Please, first process your data. \n'
             'Thanks! ;)\n\n')

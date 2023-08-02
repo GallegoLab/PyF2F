@@ -239,8 +239,6 @@ if global_affine:
     mov_centroid = np.mean(c1_ref, axis=0)
     # Save transformation matrices for later affine correction
     np.save(path_output_reg + '/transform.npy', transformation)
-    # np.save(path_output_reg + '/mov_centroid.npy', mov_centroid)
-    # np.save(path_output_reg + '/ref_centroid.npy', ref_centroid)
     # correct bead test dataset 
     for i in range(len(c1_test)):
         c1_test_new[i] = ref_centroid + np.dot(transformation, c1_test[i] - mov_centroid)

@@ -34,7 +34,7 @@ def detect_spots(path_to_folder, bgn_img, diameter, percentile,
     """
     # Load frames using PIMS
     frames = pims.open(path_to_folder + bgn_img)
-    img_num = "{}".format(bgn_img.split(".")[0].split("_")[-1])  # image number (string)
+    img_num = "{}".format(bgn_img.split(".")[0].split("_")[-1]) # .replace("Pos", ""))  # image number (string)
     if verbose:
         print("\t\t{} frames in stack...\n".format(len(frames)))
         print("# SPOT DETECTION with Trackpy...\n\n\t# READING DATA...\n\n"

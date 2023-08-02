@@ -15,7 +15,7 @@ import matplotlib as mpl
 mpl.rcParams.update({'figure.max_open_warning': 0})
 
 __author__ = "Altair C. Hernandez"
-__copyright__ = 'Copyright 2023, PyF2F-Ruler'
+__copyright__ = 'Copyright 2023, PyF2F'
 __credits__ = ["J. Sebastian Ortiz", "Laura I. Betancur", "Radovan Dojcilovic", "Andrea Picco",
                "Marko Kaksonen", "Oriol Gallego"]
 __version__ = "1.0"
@@ -25,7 +25,7 @@ __email__ = "altair.chinchilla@upf.edu"
 # PARSER
 #########
 
-parser = ArgumentParser(prog='PyF2F-Ruler',
+parser = ArgumentParser(prog='PyF2F',
                         description='Pipeline to estimate the distance between a fluorophore fused to the termini '
                                     'of a protein complex and a reference fluorophore in the anchor in living yeast'
                                     '(see PICT method in Picco et al., 2017)')

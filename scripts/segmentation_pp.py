@@ -316,7 +316,6 @@ def save_html_figure(path_to_save, spots_df, img_num, img_contour_lab, ch_name="
     fig_label_cont = px.imshow(img_contour, color_continuous_scale='gray',
                                title="<b>Image {} {}</b><br>{}".format(img_num, ch_name, foo_note))
     fig_label_cont.update_layout(coloraxis_showscale=False)  # to hide color bar
-    fig_label_cont.update_layout(coloraxis_showscale=False)
 
     # Plot spots with custom hover information
     if "dist_neigh" in selected.columns:
@@ -391,7 +390,7 @@ def main_segmentation(segment_dir, images_dir, spots_dir, results_dir, figures_d
     # Segment yeast cells if not segmented
     # Check if detected spots are present
     if not os.path.exists(images_dir) or len(os.listdir(images_dir)) == 0:
-        sys.stderr.write('\nPICT-MODELLER-ERROR: Oh! You have to be a master for trying to segment phantom images! \n'
+        sys.stderr.write('\nPyF2F-ERROR: Oh! You have to be a master for trying to segment phantom images! \n'
                          'You did not processed your raw images (option -pp), did you? If so, they disappeared :S\n'
                          'I can not segment an empty folder...Please, first process your images. \n'
                          'Thanks! ;)\n\n')
