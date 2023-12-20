@@ -79,8 +79,8 @@ You can use the Colab to run the image analysis workflow online.
 3) Create a conda environment with Python3.7:
 
 ```bash
-  $ conda create -n {ENV_NAME} python=3.7 anaconda
-  $ conda activate {ENV_NAME}
+  $ conda create -n pyf2f python=3.7 anaconda
+  $ conda activate pyf2f
  ```
 
 4) Install the requirements listed in *requirements.txt*:
@@ -115,18 +115,22 @@ PyF2F has the following structure:
 
       scripts_colab/                  (Scripts adapted to run in Colab)
               
-      full_example/
+      long_test/
           input/
               pict_images/            (21 images from Picco et al., 2017)
               reg/                    (beads set to create the registration map)
               test/                   (beads set to test the registration)
 
-      short_example/
+      short_test/
           input/
               pict_images/            (4 images from the full_example dataset)
               reg/                    (beads set to create the registration map)
               test/                   (beads set to test the registration)
 
+The folders `long_test` and `short_test` correspont to two examples that can be used to check that 
+PyF2F works properly. We recommend using the `short_test` to quickly check that PyF2F runs without 
+problems (output is generated), and the `long_test` to have an idea about the time it takes to run 
+the whole workflow.
 
 Image Analysis Tutorial
 -----------------------
