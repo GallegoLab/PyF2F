@@ -127,7 +127,7 @@ PyF2F has the following structure:
               reg/                    (beads set to create the registration map)
               test/                   (beads set to test the registration)
 
-The folders `long_test` and `short_test` correspont to two examples that can be used to check that 
+The folders `long_test` and `short_test` correspond to two examples that can be used to check that 
 PyF2F works properly. We recommend using the `short_test` to quickly check that PyF2F runs without 
 problems (output is generated), and the `long_test` to have an idea about the time it takes to run 
 the whole workflow.
