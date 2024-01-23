@@ -266,17 +266,15 @@ Copyright
 -----------
 This software includes Copyright (C) dependencies under the 
    - MIT licence (2023 Andrea Picco; 2017 Matterport, Inc.; 2013-2019 Henry Proudhon; 2016-2018 Plotly, Inc)
-   - 
-    > Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+   > Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
   
    - BSD-3-clause licence (2007-2010 the Sphinx team; 1993-2015 Ken Martin, Will Schroeder, Bill Lorensen; 2013-2014 trackpy contributors; 2001-2002 Enthought, Inc. 2003-2024, SciPy Developers; 2005-2024, NumPy Developers; 2008-2011, AQR Capital Management, LLC, Lambda Foundry, Inc. and PyData Development Team; 2012-2023, Michael L. Waskom; 2008 Andrew Collette and contributors; Matthew Newville, The University of Chicago, Renee Otten, Brandeis University, Till Stensitzki, Freie Universitat Berlin, A. R. J. Nelson, Australian Nuclear Science and Technology Organisation, Antonino Ingargiola, University of California, Los Angeles, Daniel B. Allen, Johns Hopkins University, Michal Rawlik, Eidgenossische Technische Hochschule, Zurich).
-     
-   > By obtaining, using, and/or copying this software and/or its associated
-documentation, you agree that you have read, understood, and will comply
-with the following terms and conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+   > By obtaining, using, and/or copying this software and/or its associated documentation, you agree that you have read, understood, and will comply with the following terms and conditions:
+
+The above copyright notices and this permission notice shall be included in all copies or substantial portions of the Software.
 
 
 
