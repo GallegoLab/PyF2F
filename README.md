@@ -26,8 +26,6 @@ Python implementation of our previous work [Picco A., et al, 2017](https://www.s
 where we combined [PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
 and integrative modelling to reconstruct the molecular architecture of the exocyst complex in its cellular environment.
 
-<div class="flourish-embed flourish-network" data-src="visualisation/16845080"><script src="https://public.flourish.studio/resources/embed.js"></script></div>
-
 How does it work?
 -----------
 
