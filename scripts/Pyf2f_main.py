@@ -2,7 +2,7 @@
 # coding=utf-8
 """
 ######################################################
-#################  RUN PYF2F-RULER #################
+#################  RUN PYF2F #################
 ######################################################
 
 BioImage Analysis pipeline to estimate distances between two fluorophores using the PICT method
@@ -15,7 +15,7 @@ import matplotlib as mpl
 mpl.rcParams.update({'figure.max_open_warning': 0})
 
 __author__ = "Altair C. Hernandez"
-__copyright__ = 'Copyright 2023, PyF2F'
+__copyright__ = 'Copyright 2024, PyF2F'
 __credits__ = ["J. Sebastian Ortiz", "Laura I. Betancur", "Radovan Dojcilovic", "Andrea Picco",
                "Marko Kaksonen", "Oriol Gallego"]
 __version__ = "1.0"
