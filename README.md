@@ -14,6 +14,7 @@
   - [Use Colab](#use-colab)
   - [Run it locally](#run-it-locally)
 - [Notebooks](#notebooks)
+- [Citation](#citation)
 
 <!-- /TOC -->
 
@@ -24,7 +25,10 @@ What is it?
 that are labelling the termini of a protein molecule and a static anchoring platform in the cell. This software is the 
 Python implementation of our previous work [Picco A., et al, 2017](https://www.sciencedirect.com/science/article/pii/S0092867417300521) 
 where we combined [PICT](https://www.sciencedirect.com/science/article/pii/S0092867417300521) (yeast engineering & live-cell imaging)
-and integrative modelling to reconstruct the molecular architecture of the exocyst complex in its cellular environment.
+and integrative modelling to reconstruct the molecular architecture of the exocyst complex in its cellular environment. 
+
+For more information on this pipeline and its performance see [PyF2F: a robust and simplified fluorophore-to-fluorophore distance 
+measurement tool for Protein interactions from Imaging Complexes after Translocation experiments](https://academic.oup.com/nargab/article/6/1/lqae027/7626517)
 
 How does it work?
 -----------
